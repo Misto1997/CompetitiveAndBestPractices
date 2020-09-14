@@ -1,30 +1,45 @@
 package com.Leetcode.InterviewQuestionsEasy.Array;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.Map;
 
-public class TwoSum {
+public class RotateImage {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-        int target = input.readInt();
-        out.print(getPairIndexes(ar, target));
+        int ar[][] = new int[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                ar[i][j] = input.readInt();
+            }
+        }
+        rotateArray(ar);
         out.close();
     }
 
-    private static int[] getPairIndexes(int[] ar, int target) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < ar.length; i++) {
-            int secondNum = target - ar[i];
-            if (map.containsKey(secondNum))
-                return new int[]{i, map.get(secondNum)};
-            map.put(ar[i], i);
+    private static void rotateArray(int[][] ar) {
+        for (int i = 0; i < ar.length / 2; i++) {
+            for (int j = 0; j < ar.length; j++) {
+                int temp = ar[i][j];
+                ar[i][j] = ar[ar.length - (i + 1)][j];
+                ar[ar.length - (i + 1)][j] = temp;
+            }
         }
-        return new int[]{0, 0};
+        for (int i = 0; i < ar.length; i++) {
+            for (int j = i + 1; j < ar.length; j++) {
+                int temp = ar[i][j];
+                ar[i][j] = ar[j][i];
+                ar[j][i] = temp;
+            }
+        }
+        for (int i = 0; i < ar.length; i++) {
+            for (int j = 0; j < ar.length; j++) {
+                System.out.print(ar[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
     private static class InputReader {
@@ -220,4 +235,3 @@ public class TwoSum {
         }
     }
 }
-

@@ -1,31 +1,51 @@
 package com.Leetcode.InterviewQuestionsEasy.Array;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.Map;
 
-public class TwoSum {
+public class ValidSudoku {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-        int target = input.readInt();
-        out.print(getPairIndexes(ar, target));
+        char ar[][] = new char[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++)
+                ar[i][j] = input.readString().charAt(0);
+        }
+        System.out.println(checkValidSoduku(ar));
         out.close();
     }
 
-    private static int[] getPairIndexes(int[] ar, int target) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < ar.length; i++) {
-            int secondNum = target - ar[i];
-            if (map.containsKey(secondNum))
-                return new int[]{i, map.get(secondNum)};
-            map.put(ar[i], i);
+    private static boolean checkValidSoduku(char[][] ar) {
+        for (int i = 0; i < 9; i += 3) {
+            for (int j = 0; j < 9; j += 3) {
+                boolean[] solution = new boolean[16];
+                for (int k = i; k < i + 3; k++) {
+                    for (int l = j; l < j + 3; l++) {
+                        if (ar[k][l] != '.' && solution[ar[k][l] & 15]) {
+                            return false;
+                        } else {
+                            solution[ar[k][l] & 15] = true;
+                        }
+                    }
+                }
+            }
         }
-        return new int[]{0, 0};
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (ar[i][j] == '.')
+                    continue;
+                for (int k = j + 1; k < 9; k++)
+                    if (ar[i][j] == ar[i][k])
+                        return false;
+                for (int k = i + 1; k < 9; k++)
+                    if (ar[i][j] == ar[k][j])
+                        return false;
+            }
+        }
+        return true;
     }
+
 
     private static class InputReader {
         private InputStream stream;
@@ -220,4 +240,5 @@ public class TwoSum {
         }
     }
 }
+
 

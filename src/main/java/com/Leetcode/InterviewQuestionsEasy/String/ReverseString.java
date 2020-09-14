@@ -1,30 +1,17 @@
-package com.Leetcode.InterviewQuestionsEasy.Array;
+package com.Leetcode.InterviewQuestionsEasy.String;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.Map;
 
-public class TwoSum {
+public class ReverseString {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-        int target = input.readInt();
-        out.print(getPairIndexes(ar, target));
-        out.close();
-    }
-
-    private static int[] getPairIndexes(int[] ar, int target) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < ar.length; i++) {
-            int secondNum = target - ar[i];
-            if (map.containsKey(secondNum))
-                return new int[]{i, map.get(secondNum)};
-            map.put(ar[i], i);
+        int t = input.readInt();
+        while (t-- > 0) {
+            out.printLine();
         }
-        return new int[]{0, 0};
+        out.close();
     }
 
     private static class InputReader {
