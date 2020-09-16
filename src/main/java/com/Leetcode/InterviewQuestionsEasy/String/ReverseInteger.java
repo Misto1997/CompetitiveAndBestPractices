@@ -3,23 +3,25 @@ package com.Leetcode.InterviewQuestionsEasy.String;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class ReverseString {
+public class ReverseInteger {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        char ar[] = input.readCharArray(n);
-        int start = 0;
-        int end = n - 1;
-        while (start < end) {
-            char temp = ar[start];
-            ar[start++] = ar[end];
-            ar[end--] = temp;
-        }
-        for (int i = 0; i < n; i++)
-            out.print(ar[i] + " ");
+        out.print(getReverseNumber(n));
 
         out.close();
+    }
+
+    private static int getReverseNumber(int n) {
+        long result = 0;
+        while (n != 0) {
+            result = (result * 10) + n % 10;
+            n /= 10;
+        }
+        if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE)
+            return 0;
+        return (int) result;
     }
 
     private static class InputReader {

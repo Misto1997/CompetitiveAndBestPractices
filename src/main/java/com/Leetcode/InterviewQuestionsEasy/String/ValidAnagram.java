@@ -3,23 +3,28 @@ package com.Leetcode.InterviewQuestionsEasy.String;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class ReverseString {
+public class ValidAnagram {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        char ar[] = input.readCharArray(n);
-        int start = 0;
-        int end = n - 1;
-        while (start < end) {
-            char temp = ar[start];
-            ar[start++] = ar[end];
-            ar[end--] = temp;
-        }
-        for (int i = 0; i < n; i++)
-            out.print(ar[i] + " ");
-
+        String s = input.readString();
+        String t = input.readString();
+        out.print(checkForAnaGram(s, t));
         out.close();
+    }
+
+    private static boolean checkForAnaGram(String s, String t) {
+        if (s.length() != t.length())
+            return false;
+        int frequency[] = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            frequency[s.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < t.length(); i++) {
+            if (--frequency[t.charAt(i) - 'a'] < 0)
+                return false;
+        }
+        return true;
     }
 
     private static class InputReader {

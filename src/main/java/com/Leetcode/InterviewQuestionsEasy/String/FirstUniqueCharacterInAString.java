@@ -3,23 +3,25 @@ package com.Leetcode.InterviewQuestionsEasy.String;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class ReverseString {
+public class FirstUniqueCharacterInAString {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        char ar[] = input.readCharArray(n);
-        int start = 0;
-        int end = n - 1;
-        while (start < end) {
-            char temp = ar[start];
-            ar[start++] = ar[end];
-            ar[end--] = temp;
-        }
-        for (int i = 0; i < n; i++)
-            out.print(ar[i] + " ");
-
+        String str = input.readString();
+        out.print(getIndex(str));
         out.close();
+    }
+
+    private static int getIndex(String str) {
+        int frequency[] = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            frequency[str.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (frequency[str.charAt(i) - 'a'] == 1)
+                return i;
+        }
+        return -1;
     }
 
     private static class InputReader {
