@@ -22,17 +22,17 @@ class Graph {
         Stack<Integer> stack = new Stack<>();
         boolean visited[] = new boolean[v];
         for (int i = 0; i < v; i++) {
-            if (!visited[i])
+            if (visited[i] == false)
                 Util(i, stack, visited);
         }
-        while(!stack.isEmpty()){
+        while (!stack.isEmpty()) {
             System.out.println(stack.pop());
         }
     }
 
     private void Util(int i, Stack<Integer> stack, boolean[] visited) {
         list[i].forEach((n) -> {
-            if (!visited[n])
+            if (visited[n] == false)
                 topSortUtil(n, stack, visited);
         });
         topSortUtil(i, stack, visited);
@@ -41,7 +41,7 @@ class Graph {
     private void topSortUtil(Integer n, Stack<Integer> stack, boolean[] visited) {
         visited[n] = true;
         list[n].forEach((m) -> {
-            if (!visited[m])
+            if (visited[m] == false)
                 topSortUtil(m, stack, visited);
         });
         stack.push(n);
@@ -55,7 +55,7 @@ public class TopologicalSort {
         g.addEdge(1, 2);
         g.addEdge(2, 3);
         g.addEdge(3, 4);
-       // g.addEdge(3, 4);
+        // g.addEdge(3, 4);
         g.topSort();
     }
 }
