@@ -135,16 +135,16 @@ public class AVLTree {
             return rightRotation(root);
         }
         //left right situation
-        if (balanceFactor > 1 && i > root.left.data) {
+        else if (balanceFactor > 1 && i > root.left.data) {
             root.left = leftRotation(root.left);
             return rightRotation(root);
         }
         //right right rotation
-        if (balanceFactor < -1 && i > root.right.data) {
+        else if (balanceFactor < -1 && i > root.right.data) {
             return leftRotation(root);
         }
         //right left rotation
-        if (balanceFactor < -1 && i < root.right.data) {
+        else if (balanceFactor < -1 && i < root.right.data) {
             root.right = rightRotation(root.right);
             return leftRotation(root);
         }
