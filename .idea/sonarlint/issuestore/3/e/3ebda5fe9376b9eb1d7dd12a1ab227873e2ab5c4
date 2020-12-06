@@ -1,0 +1,10 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ïÆá€
+:
+java:S1659"$Declare "height" on a separate line.(°†
+9
+java:S1659"#Declare "right" on a separate line.(çùà¶
+S
+java:S1197"8Move the array designator from the variable to the type.(»‹”âùÿÿÿÿ
+V	java:S125"<This block of commented-out lines of code should be removed.(‘ŒÁ¾ùÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(¦ÉŠ£

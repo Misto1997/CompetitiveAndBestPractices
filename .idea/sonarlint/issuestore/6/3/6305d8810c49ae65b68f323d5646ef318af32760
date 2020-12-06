@@ -1,0 +1,16 @@
+
+t
+java:S3776a"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(£ÒÖ³ýÿÿÿÿ8òš§ÖÞ.
+V
+java:S1197Ì"8Move the array designator from the variable to the type.(óÒ´¾8¸¥ÞÖÞ.
+U
+java:S1197"8Move the array designator from the variable to the type.(ò¢£»8òš§ÖÞ.
+Z
+java:S1197"8Move the array designator from the variable to the type.(¼±º—þÿÿÿÿ8òš§ÖÞ.
+U
+java:S1197Ö"8Move the array designator from the variable to the type.(Äà•^8‰‰ÛÖÞ.
+U
+java:S1197&"8Move the array designator from the variable to the type.(Çé®ü8òš§ÖÞ.
+U
+java:S1197"8Move the array designator from the variable to the type.(Ø§ßÜ8òš§ÖÞ.
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Þº¢Ïýÿÿÿÿ
