@@ -1,9 +1,11 @@
 package com.Leetcode.InterviewQuestionsMedium.Backtracking;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
 
-public class LetterCombinationsOfAPhoneNumber {
+public class GenerateParentheses {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -200,29 +202,23 @@ public class LetterCombinationsOfAPhoneNumber {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        String digits = input.readString();
-        List<String> list = letterCombinations(digits);
+        int n = input.readInt();
+        List<String> list = new ArrayList<>();
+        backTrackSolution(list, "", 0, 0, n);
         System.out.println(list);
         out.close();
     }
 
-    public static List<String> letterCombinations(String digits) {
-
-        String ar[] = {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        LinkedList<String> list = new LinkedList<>();
-        if (digits.isEmpty())
-            return list;
-        list.add("");
-        for (int i = 0; i < digits.length(); i++) {
-            int count = list.size();
-            while (count-- > 0) {
-                String str = list.remove();
-                String digitChars = ar[digits.charAt(i)-'0'];
-                for (int j = 0; j < digitChars.length(); j++) {
-                    list.addLast(str + digitChars.charAt(j));
-                }
-            }
+    private static void backTrackSolution(List<String> list, String str, int opening, int closing, int max) {
+        if (str.length() == max * 2) {
+            list.add(str);
+            return;
         }
-        return list;
+        if (opening < max)
+            backTrackSolution(list, str + "(", opening + 1, closing, max);
+        if (closing < opening)
+            backTrackSolution(list, str + ")", opening, closing + 1, max);
     }
+
+
 }

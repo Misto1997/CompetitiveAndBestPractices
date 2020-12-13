@@ -1,9 +1,9 @@
 package com.Leetcode.InterviewQuestionsMedium.Backtracking;
 
 import java.io.*;
-import java.util.*;
+import java.util.InputMismatchException;
 
-public class LetterCombinationsOfAPhoneNumber {
+public class WordSearch {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -11,8 +11,8 @@ public class LetterCombinationsOfAPhoneNumber {
         private int numChars;
         private InputReader.SpaceCharFilter filter;
 
-        public int[] readIntArray(int n) {
-            int a[] = new int[n];
+        public Integer[] readIntArray(int n) {
+            Integer a[] = new Integer[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
             }
@@ -200,29 +200,56 @@ public class LetterCombinationsOfAPhoneNumber {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        String digits = input.readString();
-        List<String> list = letterCombinations(digits);
-        System.out.println(list);
+        int m = input.readInt();
+        int n = input.readInt();
+        char ar[][] = new char[m][n];
+        for (int i = 0; i < m; i++) {
+            ar[i] = input.readCharArray(n);
+        }
+        String word = input.readString();
+        System.out.println(exist(ar, word));
         out.close();
     }
 
-    public static List<String> letterCombinations(String digits) {
-
-        String ar[] = {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        LinkedList<String> list = new LinkedList<>();
-        if (digits.isEmpty())
-            return list;
-        list.add("");
-        for (int i = 0; i < digits.length(); i++) {
-            int count = list.size();
-            while (count-- > 0) {
-                String str = list.remove();
-                String digitChars = ar[digits.charAt(i)-'0'];
-                for (int j = 0; j < digitChars.length(); j++) {
-                    list.addLast(str + digitChars.charAt(j));
+    public static boolean exist(char[][] board, String word) {
+        for (int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[0].length; j++)
+                if (board[i][j] == word.charAt(0)) {
+                    board[i][j] = '1';
+                    if (getSeq(board, word, 1, i, j))
+                        return true;
+                    board[i][j] = word.charAt(0);
                 }
-            }
+        return false;
+    }
+
+    private static boolean getSeq(char[][] board, String word, int count, int i, int j) {
+        if (count == word.length())
+            return true;
+        if (j < board[0].length - 1 && board[i][j + 1] == word.charAt(count)) {
+            board[i][j + 1] = '1';
+            if (getSeq(board, word, count + 1, i, j + 1))
+                return true;
+            board[i][j + 1] = word.charAt(count);
         }
-        return list;
+        if (i < board.length - 1 && board[i + 1][j] == word.charAt(count)) {
+            board[i + 1][j] = '1';
+            if (getSeq(board, word, count + 1, i + 1, j))
+                return true;
+            board[i + 1][j] = word.charAt(count);
+        }
+        if (j > 0 && board[i][j - 1] == word.charAt(count)) {
+            board[i][j - 1] = '1';
+            if (getSeq(board, word, count + 1, i, j - 1))
+                return true;
+            board[i][j - 1] = word.charAt(count);
+        }
+        if (i > 0 && board[i - 1][j] == word.charAt(count)) {
+            board[i - 1][j] = '1';
+            if (getSeq(board, word, count + 1, i - 1, j))
+                return true;
+            board[i - 1][j] = word.charAt(count);
+        }
+        return false;
     }
 }

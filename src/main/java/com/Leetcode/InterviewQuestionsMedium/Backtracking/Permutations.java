@@ -1,9 +1,12 @@
 package com.Leetcode.InterviewQuestionsMedium.Backtracking;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.List;
 
-public class LetterCombinationsOfAPhoneNumber {
+public class Permutations {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -11,8 +14,8 @@ public class LetterCombinationsOfAPhoneNumber {
         private int numChars;
         private InputReader.SpaceCharFilter filter;
 
-        public int[] readIntArray(int n) {
-            int a[] = new int[n];
+        public Integer[] readIntArray(int n) {
+            Integer a[] = new Integer[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
             }
@@ -200,29 +203,38 @@ public class LetterCombinationsOfAPhoneNumber {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        String digits = input.readString();
-        List<String> list = letterCombinations(digits);
-        System.out.println(list);
+        int n = input.readInt();
+        Integer nums[] = input.readIntArray(n);
+
+        System.out.println(permute(nums));
         out.close();
     }
 
-    public static List<String> letterCombinations(String digits) {
-
-        String ar[] = {"0", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-        LinkedList<String> list = new LinkedList<>();
-        if (digits.isEmpty())
-            return list;
-        list.add("");
-        for (int i = 0; i < digits.length(); i++) {
-            int count = list.size();
-            while (count-- > 0) {
-                String str = list.remove();
-                String digitChars = ar[digits.charAt(i)-'0'];
-                for (int j = 0; j < digitChars.length(); j++) {
-                    list.addLast(str + digitChars.charAt(j));
-                }
-            }
+    public static List<List<Integer>> permute(Integer[] nums) {
+        List<List<Integer>> listOfList = new ArrayList<>();
+        if (nums.length == 1) {
+            listOfList.add(Arrays.asList(nums));
+            return listOfList;
         }
-        return list;
+        swapAndSave(0, nums, listOfList);
+        return listOfList;
+    }
+
+    private static void swapAndSave(int pos, Integer nums[], List<List<Integer>> listOfList) {
+        if (pos == nums.length) {
+            listOfList.add(new ArrayList<>(Arrays.asList(nums)));
+            return;
+        }
+        for (int i = pos; i < nums.length; i++) {
+            swap(pos, i, nums);
+            swapAndSave(pos + 1, nums, listOfList);
+            swap(pos, i, nums);
+        }
+    }
+
+    private static void swap(int pos, int i, Integer nums[]) {
+        int temp = nums[pos];
+        nums[pos] = nums[i];
+        nums[i] = temp;
     }
 }
