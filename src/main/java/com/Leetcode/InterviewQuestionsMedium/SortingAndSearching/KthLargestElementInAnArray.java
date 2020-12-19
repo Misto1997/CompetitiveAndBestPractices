@@ -3,7 +3,7 @@ package com.Leetcode.InterviewQuestionsMedium.SortingAndSearching;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class SortColors {
+public class KthLargestElementInAnArray {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -202,18 +202,34 @@ public class SortColors {
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
         int nums[] = input.readIntArray(n);
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 1; j < nums.length - i; j++) {
-                if (nums[j] < nums[j - 1]) {
-                    int temp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = temp;
-                }
-            }
-        }
-        for (int i = 0; i < nums.length; i++)
-            out.print(nums[i] + " ");
+        int k = input.readInt();
+        out.print(quickSelect(nums, 0, nums.length - 1, nums.length - k));
 
         out.close();
+    }
+
+    private static int quickSelect(int[] nums, int low, int high, int k) {
+        int partition = getPartition(nums, low, high);
+        if (partition == k)
+            return nums[partition];
+        else if (partition < k)
+            return quickSelect(nums, partition + 1, high, k);
+        else
+            return quickSelect(nums, low, partition - 1, k);
+    }
+
+    private static int getPartition(int[] nums, int low, int high) {
+        int pivot = nums[high], lowPivot = low;
+        for (int i = low; i <= high; i++) {
+            if (nums[i] < pivot) {
+                int temp = nums[i];
+                nums[i] = nums[lowPivot];
+                nums[lowPivot] = temp;
+                lowPivot++;
+            }
+        }
+        nums[high] = nums[lowPivot];
+        nums[lowPivot] = pivot;
+        return lowPivot;
     }
 }

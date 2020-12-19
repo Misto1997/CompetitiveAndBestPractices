@@ -1,9 +1,9 @@
 package com.Leetcode.InterviewQuestionsMedium.SortingAndSearching;
 
 import java.io.*;
-import java.util.InputMismatchException;
+import java.util.*;
 
-public class SortColors {
+public class TopKFrequentElements {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -202,18 +202,39 @@ public class SortColors {
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
         int nums[] = input.readIntArray(n);
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 1; j < nums.length - i; j++) {
-                if (nums[j] < nums[j - 1]) {
-                    int temp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = temp;
+        int k = input.readInt();
+        int ar[] = topKFrequent(nums, k);
+        for (int i : ar)
+            out.print(i);
+
+        out.close();
+    }
+
+    public static int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        List<Integer>[] list = new ArrayList[nums.length + 1];
+        for (int val : map.keySet()) {
+            int freq = map.get(val);
+            if (list[freq] == null)
+                list[freq] = new ArrayList<>();
+            list[freq].add(val);
+        }
+        int arr[] = new int[k];
+        int counter = 0;
+        for (int i = list.length - 1; i >= 0; i--) {
+            if (counter == k)
+                break;
+            if (list[i] != null) {
+                for (int num : list[i]) {
+                    if (counter == k)
+                        break;
+                    arr[counter++] = num;
                 }
             }
         }
-        for (int i = 0; i < nums.length; i++)
-            out.print(nums[i] + " ");
-
-        out.close();
+        return arr;
     }
 }

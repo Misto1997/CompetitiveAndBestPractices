@@ -3,7 +3,7 @@ package com.Leetcode.InterviewQuestionsMedium.SortingAndSearching;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class SortColors {
+public class FindPeakElement {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -202,17 +202,15 @@ public class SortColors {
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
         int nums[] = input.readIntArray(n);
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 1; j < nums.length - i; j++) {
-                if (nums[j] < nums[j - 1]) {
-                    int temp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = temp;
-                }
-            }
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            if (nums[mid] > nums[mid + 1])
+                r = mid;
+            else
+                l = mid + 1;
         }
-        for (int i = 0; i < nums.length; i++)
-            out.print(nums[i] + " ");
+        out.print(l);
 
         out.close();
     }

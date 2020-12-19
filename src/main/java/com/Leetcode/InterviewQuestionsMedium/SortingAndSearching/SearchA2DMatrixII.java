@@ -3,7 +3,7 @@ package com.Leetcode.InterviewQuestionsMedium.SortingAndSearching;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class SortColors {
+public class SearchA2DMatrixII {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -200,20 +200,27 @@ public class SortColors {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
+        int m = input.readInt();
         int n = input.readInt();
-        int nums[] = input.readIntArray(n);
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 1; j < nums.length - i; j++) {
-                if (nums[j] < nums[j - 1]) {
-                    int temp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = temp;
-                }
-            }
-        }
-        for (int i = 0; i < nums.length; i++)
-            out.print(nums[i] + " ");
+        int nums[][] = new int[m][n];
+        int target = input.readInt();
+        for (int i = 0; i < m; i++)
+            nums[i] = input.readIntArray(n);
+        int row = 0, column = n - 1;
+        System.out.println(getTarget(nums, row, column, target));
 
         out.close();
+    }
+
+    private static boolean getTarget(int[][] nums, int row, int column, int target) {
+        while (column >= 0 && row < nums.length) {
+            if (target == nums[row][column])
+                return true;
+            else if (target < nums[row][column])
+                column--;
+            else
+                row++;
+        }
+        return false;
     }
 }

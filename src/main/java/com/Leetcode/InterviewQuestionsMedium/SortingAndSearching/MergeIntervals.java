@@ -1,9 +1,12 @@
 package com.Leetcode.InterviewQuestionsMedium.SortingAndSearching;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 
-public class SortColors {
+public class MergeIntervals {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -201,19 +204,27 @@ public class SortColors {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int nums[] = input.readIntArray(n);
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 1; j < nums.length - i; j++) {
-                if (nums[j] < nums[j - 1]) {
-                    int temp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = temp;
-                }
+        int intervals[][] = new int[n][2];
+        for (int i = 0; i < n; i++)
+            intervals[i] = input.readIntArray(2);
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        List<int[]> list = new ArrayList<>();
+        int i = 0;
+        while (i < n) {
+            int first = intervals[i][0];
+            int last = intervals[i][1];
+            while (i < n - 1 && last >= intervals[i + 1][0]) {
+                last=Math.max(last, intervals[i+1][1]);
+                i++;
             }
+            list.add(new int[]{first, last});
+            i++;
         }
-        for (int i = 0; i < nums.length; i++)
-            out.print(nums[i] + " ");
-
+        for (int ar[] : list) {
+            for (int j : ar)
+                System.out.print(j);
+            System.out.println();
+        }
         out.close();
     }
 }

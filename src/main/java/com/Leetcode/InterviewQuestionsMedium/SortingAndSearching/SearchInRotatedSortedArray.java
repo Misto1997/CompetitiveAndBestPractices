@@ -3,7 +3,7 @@ package com.Leetcode.InterviewQuestionsMedium.SortingAndSearching;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class SortColors {
+public class SearchInRotatedSortedArray {
     private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -202,18 +202,28 @@ public class SortColors {
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
         int nums[] = input.readIntArray(n);
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 1; j < nums.length - i; j++) {
-                if (nums[j] < nums[j - 1]) {
-                    int temp = nums[j];
-                    nums[j] = nums[j - 1];
-                    nums[j - 1] = temp;
-                }
-            }
-        }
-        for (int i = 0; i < nums.length; i++)
-            out.print(nums[i] + " ");
+        int target= input.readInt();
+        System.out.println(search(nums,0,nums.length-1,target));
 
         out.close();
+    }
+    private static int search(int arr[], int l, int h, int key)
+    {
+        if (l > h)
+            return -1;
+
+        int mid = l + (h-l) / 2;
+        if (arr[mid] == key)
+            return mid;
+
+        if (arr[l] <= arr[mid]) {
+            if (key >= arr[l] && key <= arr[mid])
+                return search(arr, l, mid - 1, key);
+            return search(arr, mid + 1, h, key);
+        }
+        if (key >= arr[mid] && key <= arr[h])
+            return search(arr, mid + 1, h, key);
+
+        return search(arr, l, mid - 1, key);
     }
 }
