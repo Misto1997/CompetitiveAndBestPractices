@@ -1,28 +1,21 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Math;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class FactorialTrailingZeroes {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
+        int count = 0;
+        while (n > 0) {
+            count += n / 5;
+            n /= 5;
+        }
+        out.print(count);
 
-        System.out.println(getPossibility(ar, n - 2, n - 1));
         out.close();
-    }
-
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
     }
 
     private static class InputReader {

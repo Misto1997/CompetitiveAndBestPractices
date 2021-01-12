@@ -1,28 +1,33 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Math;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class DivideTwoIntegers {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int divident = input.readInt();
+        int divisor = input.readInt();
+        if (divident == Integer.MIN_VALUE && divisor == -1)
+            out.print(Integer.MAX_VALUE);
+        if (divisor == 0)
+            out.print(Integer.MAX_VALUE);
+        int sign = (divident > 0) ^ (divisor > 0) ? -1 : 1;
+        long divident1 = Math.abs((long)divident);
+        long divisor1 = Math.abs((long)divisor);
+        int result = 0;
+        while (divident1 >= divisor1) {
+            long temp = divisor1, mask = 1;
+            while (temp << 1 <= divident1) {
+                temp <<= 1;
+                mask <<= 1;
+            }
+            divident1 -= temp;
+            result += mask;
+        }
+        out.print(result * sign);
         out.close();
-    }
-
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
     }
 
     private static class InputReader {

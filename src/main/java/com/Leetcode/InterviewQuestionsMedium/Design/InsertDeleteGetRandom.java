@@ -1,28 +1,38 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Design;
 
 import java.io.*;
-import java.util.InputMismatchException;
+import java.util.*;
 
-public class JumpGame {
+public class InsertDeleteGetRandom {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
+        Map<Integer, Integer> map = new HashMap<>();
+        System.out.println(insert(map, 1));
+        System.out.println(insert(map, 2));
+        System.out.println(insert(map, 2));
+        System.out.println(remove(map, 5));
+        System.out.println(remove(map, 2));
+        System.out.println(getRandom(map));
 
-        System.out.println(getPossibility(ar, n - 2, n - 1));
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
+    public static boolean insert(Map<Integer, Integer> map, int val) {
+        if (map.containsKey(val))
             return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
+        return map.put(val, val) == null;
+    }
+
+    public static boolean remove(Map<Integer, Integer> map, int val) {
+        return map.remove(val) != null;
+    }
+
+    public static int getRandom(Map<Integer, Integer> map) {
+        List<Integer> list = new ArrayList<>(map.keySet());
+        Random random = new Random();
+        int index = random.nextInt(list.size());
+        return list.get(index);
     }
 
     private static class InputReader {

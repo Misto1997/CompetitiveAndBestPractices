@@ -1,28 +1,21 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class FindTheDuplicateNumber {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int nums[] = input.readIntArray(n);
+        int check[] = new int[nums.length + 1];
+        for (int i = 0; i < nums.length; i++) {
+            if (check[nums[i]] != 0)
+                System.out.println(nums[i]);
+            check[nums[i]] = 1;
+        }
         out.close();
-    }
-
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
     }
 
     private static class InputReader {

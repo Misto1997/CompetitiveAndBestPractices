@@ -1,28 +1,50 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Math;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class FractionToRecurringDecimal {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int numerator = input.readInt();
+        int denominator = input.readInt();
+        out.print(getValue(numerator,denominator));
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
+    private static String getValue(int numerator, int denominator) {
+        if (numerator == 0) {
+            return "0";
+        }
+        StringBuilder res = new StringBuilder();
+        res.append(((numerator > 0) ^ (denominator > 0)) ? "-" : "");
+        long num = Math.abs((long)numerator);
+        long den = Math.abs((long)denominator);
+        res.append(num / den);
+        num %= den;
+        if (num == 0) {
+            return res.toString();
+        }
+        res.append(".");
+        HashMap<Long, Integer> map = new HashMap<Long, Integer>();
+        map.put(num, res.length());
+        while (num != 0) {
+            num *= 10;
+            res.append(num / den);
+            num %= den;
+            if (map.containsKey(num)) {
+                int index = map.get(num);
+                res.insert(index, "(");
+                res.append(")");
+                break;
+            }
+            else {
+                map.put(num, res.length());
+            }
+        }
+        return res.toString();
     }
 
     private static class InputReader {

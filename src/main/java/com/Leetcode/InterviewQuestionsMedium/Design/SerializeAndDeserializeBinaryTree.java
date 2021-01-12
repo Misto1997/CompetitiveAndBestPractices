@@ -1,28 +1,71 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Design;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class JumpGame {
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
+public class SerializeAndDeserializeBinaryTree {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
+        TreeNode root = new TreeNode();
+        //root.left = new TreeNode(2);
+        //root.right = new TreeNode(3);
+        String str = serialize(root);
+        deserialize(str);
 
-        System.out.println(getPossibility(ar, n - 2, n - 1));
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
+    public static String serialize(TreeNode root) {
+        String str = "";
+        str = traverseTree(root, str);
+        System.out.print(str);
+        return str;
+    }
+
+    private static String traverseTree(TreeNode root, String str) {
+        if (root == null) {
+            str += "null,";
+            return str;
+        } else {
+            str += root.val + ",";
+            str = traverseTree(root.left, str);
+            str = traverseTree(root.right, str);
+        }
+        return str;
+    }
+
+    public static TreeNode deserialize(String data) {
+        Queue<String> queue = new LinkedList<>(Arrays.asList(data.split(",")));
+        return buildTree(queue);
+    }
+
+    private static TreeNode buildTree(Queue<String> queue) {
+        String str = queue.poll();
+        if (str.equals("null"))
+            return null;
+        else {
+            TreeNode root = new TreeNode(Integer.parseInt(str));
+            root.left = buildTree(queue);
+            root.right = buildTree(queue);
+            return root;
+        }
     }
 
     private static class InputReader {

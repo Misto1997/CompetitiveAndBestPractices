@@ -1,28 +1,30 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Math;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class HappyNumber {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int slow = n;
+        int fast = squareOfNumber(n);
+        while (fast != 1 && slow != fast) {
+            slow = squareOfNumber(slow);
+            fast = squareOfNumber(squareOfNumber(fast));
+        }
+        System.out.println(fast == 1);
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
+    private static int squareOfNumber(int n) {
+        int sum = 0;
+        while (n != 0) {
+            sum += (n % 10) * (n % 10);
+            n /= 10;
+        }
+        return sum;
     }
 
     private static class InputReader {

@@ -1,28 +1,19 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Math;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class SqrtX {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int x = input.readInt();
+        long newtonNum = x;
+        while (newtonNum * newtonNum > x) {
+            newtonNum = (newtonNum + x / newtonNum) / 2;
+        }
+        out.print(newtonNum);
         out.close();
-    }
-
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
     }
 
     private static class InputReader {

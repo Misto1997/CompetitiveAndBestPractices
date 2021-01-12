@@ -1,28 +1,30 @@
-package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
+package com.Leetcode.InterviewQuestionsMedium.Math;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class PowXN {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
+        double x = input.readDouble();
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        out.print(pow(x, n));
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
+    public static double pow(double x, int n) {
+        if (n == 0)
+            return 1;
+        if(n == Integer.MIN_VALUE){
+            x = x * x;
+            n = n/2;
+        }
+        if (n < 0) {
+            n = -n;
+            x = 1 / x;
+        }
+        return (n % 2 == 0) ? pow(x * x, n / 2) : x * pow(x * x, n / 2);
     }
 
     private static class InputReader {

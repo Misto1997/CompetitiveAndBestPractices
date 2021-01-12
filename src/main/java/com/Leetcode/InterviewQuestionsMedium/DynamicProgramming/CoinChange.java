@@ -1,28 +1,34 @@
 package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class CoinChange {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int coins[] = input.readIntArray(n);
+        int amount = input.readInt();
+        int dp[] = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        System.out.println(getMinimumCoinRequired(coins, amount, dp));
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
+    private static int getMinimumCoinRequired(int[] coins, int amount, int dp[]) {
+        if (amount == 0)
+            return 0;
+        for (int coin : coins) {
+            for (int i = 1; i <= amount; i++) {
+                if (coin > i)
+                    continue;
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+            }
+        }
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
     }
 
     private static class InputReader {

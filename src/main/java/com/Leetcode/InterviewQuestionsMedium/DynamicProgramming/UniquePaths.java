@@ -1,28 +1,29 @@
 package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class UniquePaths {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
+        int m = input.readInt();
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
+/*        int dp[][] = new int[m][n];
+        for (int i = 0; i < m; i++)
+            Arrays.fill(dp[i], 1);
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];*/
 
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int dp[]=new int[n];
+        Arrays.fill(dp,1);
+        for(int i=1;i<m;i++)
+            for(int j=1;j<n;j++)
+                dp[j]+=dp[j-1];
+        System.out.println(dp[n-1]);
         out.close();
-    }
-
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
     }
 
     private static class InputReader {

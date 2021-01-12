@@ -3,27 +3,29 @@ package com.Leetcode.InterviewQuestionsMedium.DynamicProgramming;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class JumpGame {
+public class LongestIncreasingSubsequence {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
         int n = input.readInt();
-        int ar[] = input.readIntArray(n);
-
-        System.out.println(getPossibility(ar, n - 2, n - 1));
+        int nums[] = input.readIntArray(n);
+        int dp[] = new int[nums.length];
+        dp[0] = 1;
+        int result = 0;
+        for (int i = 1; i < nums.length; i++) {
+            int max = 0;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j])
+                    max = Math.max(max, dp[j]);
+            }
+            dp[i] = max + 1;
+            if (result < dp[i])
+                result = dp[i];
+        }
+        System.out.println(result);
         out.close();
     }
 
-    private static boolean getPossibility(int ar[], int current, int desired) {
-        if (current == 0) {
-            if (ar[current] >= desired - current)
-                return true;
-            return false;
-        } else if (ar[current] >= desired - current)
-            return getPossibility(ar, current - 1, current);
-        else
-            return getPossibility(ar, current - 1, desired);
-    }
 
     private static class InputReader {
         private InputStream stream;
