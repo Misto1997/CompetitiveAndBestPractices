@@ -2,19 +2,36 @@ package com.Leetcode.InterviewQuestionsMedium.Others;
 
 import java.io.*;
 import java.util.InputMismatchException;
+import java.util.Stack;
 
-public class SumOfTwoIntegers {
+public class EvaluateReversePolishNotation {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int a = input.readInt();
-        int b = input.readInt();
-        out.print(getSum(a, b));
+        int n = input.readInt();
+        String token[] = new String[n];
+        for (int i = 0; i < n; i++)
+            token[i] = input.readString();
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < token.length; i++) {
+            if (!(token[i].equals("+") || token[i].equals("-") ||
+                    token[i].equals("/") || token[i].equals("*"))) {
+                stack.push(Integer.parseInt(token[i]));
+            } else {
+                int a = stack.pop();
+                int b = stack.pop();
+                if (token[i].equals("+"))
+                    stack.push(a + b);
+                else if (token[i].equals("-"))
+                    stack.push(b - a);
+                else if (token[i].equals("/"))
+                    stack.push(b / a);
+                else if (token[i].equals("*"))
+                    stack.push(a * b);
+            }
+        }
+        out.print(stack.pop());
         out.close();
-    }
-
-    private static int getSum(int a, int b) {
-        return b == 0 ? a : getSum(a ^ b, (a & b) << 1);
     }
 
     private static class InputReader {

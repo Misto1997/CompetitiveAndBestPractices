@@ -3,18 +3,26 @@ package com.Leetcode.InterviewQuestionsMedium.Others;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class SumOfTwoIntegers {
+public class MajorityElement {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int a = input.readInt();
-        int b = input.readInt();
-        out.print(getSum(a, b));
+        int n = input.readInt();
+        int[] nums = input.readIntArray(n);
+        int candidate = 0;
+        int count = 0;
+        for (int num : nums) {
+            if (count == 0) {
+                count++;
+                candidate = num;
+            } else if (candidate == num) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+        System.out.println(candidate);
         out.close();
-    }
-
-    private static int getSum(int a, int b) {
-        return b == 0 ? a : getSum(a ^ b, (a & b) << 1);
     }
 
     private static class InputReader {
