@@ -1,75 +1,90 @@
-package com.practice;
+package com.codechef;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class MaximiseIslands {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
+        int t = input.readInt();
+        while (t-- > 0) {
+            int n = input.readInt();
+            int m = input.readInt();
+            int count1 = 0;
+            int count2 = 0;
+            String ar[][] = new String[n][m];
+            for (int i = 0; i < n; i++)
+                ar[i] = input.readString().split("");
+            if ((n % 2 == 0 && m % 2 == 0) || (n % 2 == 0 && m % 2 != 0) || (n % 2 != 0 && m % 2 == 0)) {
+                int flag = 2;
+                for (int i = 0; i < n; i++) {
+                    flag = flag == 1 ? 2 : 1;
+                    if (flag == 1) {
+                        for (int j = 0; j < m; j += 2) {
+                            if (ar[i][j].equals("."))
+                                count1++;
+                            if (j + 1 < m && ar[i][j + 1].equals("*"))
+                                count1++;
+                        }
+                    } else {
+                        for (int j = 0; j < m; j += 2) {
+                            if (ar[i][j].equals("*"))
+                                count1++;
+                            if (j + 1 < m && ar[i][j + 1].equals("."))
+                                count1++;
+                        }
                     }
-                    num = rotateNum(num);
                 }
-                if (flag == true)
-                    count++;
+                flag = 1;
+                for (int i = 0; i < n; i++) {
+                    flag = flag == 1 ? 2 : 1;
+                    if (flag == 1) {
+                        for (int j = 0; j < m; j += 2) {
+                            if (ar[i][j].equals("."))
+                                count2++;
+                            if (j + 1 < m && ar[i][j + 1].equals("*"))
+                                count2++;
+                        }
+                    } else {
+                        for (int j = 0; j < m; j += 2) {
+                            if (ar[i][j].equals("*"))
+                                count2++;
+                            if (j + 1 < m && ar[i][j + 1].equals("."))
+                                count2++;
+                        }
+                    }
+                }
+                if (count1 < count2)
+                    out.printLine(count1);
+                else
+                    out.printLine(count2);
+            } else {
+                int flag = 2;
+                for (int i = 0; i < n; i++) {
+                    flag = flag == 1 ? 2 : 1;
+                    if (flag == 1) {
+                        for (int j = 0; j < m; j += 2) {
+                            if (ar[i][j].equals("."))
+                                count1++;
+                            if (j + 1 < m && ar[i][j + 1].equals("*"))
+                                count1++;
+                        }
+                    } else {
+                        for (int j = 0; j < m; j += 2) {
+                            if (ar[i][j].equals("*"))
+                                count1++;
+                            if (j + 1 < m && ar[i][j + 1].equals("."))
+                                count1++;
+                        }
+                    }
+                }
+                out.printLine(count1);
+
             }
+
         }
-        System.out.println(count);
-
-
         out.close();
-    }
-
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
-        }
-        return prime;
     }
 
     private static class InputReader {

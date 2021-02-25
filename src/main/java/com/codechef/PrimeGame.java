@@ -1,75 +1,41 @@
-package com.practice;
+package com.codechef;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class PrimeGame {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
+        int t = input.readInt();
+        int[] ar = new int[721];
+        sieveOfEratosthenes(ar);
+        while (t-- > 0) {
+            int x = input.readInt();
+            int y = input.readInt();
+            if (x < 3) {
+                out.printLine("Chef");
+            }else{
+                if(ar[x]%2==0 && y>=ar[x]){
+                    out.printLine("Divyam");
                 }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
             }
+
         }
-        System.out.println(count);
-
-
         out.close();
     }
 
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
+    private static void sieveOfEratosthenes(int[] ar) {
+        for (int i = 2; i * i < ar.length; i++) {
+            if (ar[i] == 0) {
+                for (int j = 2; i * j < ar.length; j++) {
+                    ar[i * j] += 1;
+                }
             }
         }
-        return prime;
+        for(int i=0;i<ar.length;i++)
+            System.out.print(ar[i]+" ");
+
     }
 
     private static class InputReader {
@@ -87,6 +53,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -265,3 +239,4 @@ public class InterviewQuestion {
         }
     }
 }
+

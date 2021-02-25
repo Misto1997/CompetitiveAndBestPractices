@@ -1,75 +1,40 @@
-package com.practice;
+package com.codechef;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class PrimeTouple {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
-            }
+        int t = input.readInt();
+        int[] primeCount = sieveOfEratosthenes(1000001);
+        while (t-- > 0) {
+            int n = input.readInt();
+            out.printLine(primeCount[n]);
         }
-        System.out.println(count);
-
-
         out.close();
     }
 
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
+    static int[] sieveOfEratosthenes(int n) {
+        boolean[] prime = new boolean[n + 1];
+        int[] primeCount = new int[n + 1];
+        int count = 0;
+        Arrays.fill(prime, true);
+        for (int i = 2; i * i <= n; i++) {
+            if (prime[i] == true) {
+                for (int j = i * i; j <= n; j += i) {
+                    prime[j] = false;
+                }
             }
         }
-        return prime;
+        for (int i = 5; i <= n; i++) {
+            if (prime[i] && prime[i - 2])
+                count++;
+            primeCount[i] = count;
+        }
+        return primeCount;
     }
 
     private static class InputReader {

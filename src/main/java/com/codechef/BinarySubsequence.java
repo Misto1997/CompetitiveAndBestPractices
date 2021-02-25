@@ -1,75 +1,64 @@
-package com.practice;
+package com.codechef;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class BinarySubsequence {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
+        int t = input.readInt();
+        while (t-- > 0) {
+            int n = input.readInt();
+            String s = input.readString();
+            int[] ar = new int[n];
+            for (int i = 0; i < n; i++)
+                ar[i] = Character.getNumericValue(s.charAt(i));
+            int max = LongestIncreasingSubsequenceLength(ar, n);
+            out.printLine(n - max);
+/*            int[] dp = new int[n];
+            Arrays.fill(dp, 1);
+            for (int i = 1; i < n; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (ar[i] >= ar[j] && dp[i] < dp[j] + 1)
+                        dp[i] = dp[j] + 1;
                 }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
             }
+            int max = 0;
+            for (int i = 0; i < n; i++) {
+                if (max < dp[i])
+                    max = dp[i];
+            }
+            out.printLine(max);*/
         }
-        System.out.println(count);
-
-
         out.close();
     }
 
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
+    static int CeilIndex(int ar[], int l, int r, int key) {
+        while (r - l > 1) {
+            int m = l + (r - l) / 2;
+            if (ar[m] > key)
+                r = m;
+            else
+                l = m;
         }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
+        return r;
     }
 
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
+    static int LongestIncreasingSubsequenceLength(int ar[], int size) {
+        int[] dp = new int[size];
+        int len;
+        dp[0] = ar[0];
+        len = 1;
+        for (int i = 1; i < size; i++) {
+            if (ar[i] < dp[0])
+                dp[0] = ar[i];
+            else if (ar[i] >= dp[len - 1])
+                dp[len++] = ar[i];
+            else
+                dp[CeilIndex(dp, -1, len - 1, ar[i])] = ar[i];
         }
-        return prime;
+        return len;
     }
 
     private static class InputReader {

@@ -1,75 +1,65 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.ArrayAndStrings;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class GameOfLife {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
+        int m = input.readInt();
+        int n = input.readInt();
+        int[][] board = new int[m][n];
+        for (int i = 0; i < m; i++)
+            board[i] = input.readIntArray(n);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int count = getLivesCount(board, m, n, i, j);
+                if (board[i][j] == 0) {
+                    if (count == 3)
+                        board[i][j] = 2;
+                } else {
+                    if (count > 3)
+                        board[i][j] = 3;
+                    else if (count < 2)
+                        board[i][j] = 3;
                 }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
             }
         }
-        System.out.println(count);
-
-
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 2)
+                    board[i][j] = 1;
+                else if (board[i][j] == 3)
+                    board[i][j] = 0;
+            }
+        }
+        for (int[] i : board)
+            for (int j : i)
+                System.out.print(j + " ");
         out.close();
     }
 
+    private static int getLivesCount(int[][] board, int m, int n, int i, int j) {
+        int count = 0;
+        if (j + 1 < n && board[i][j + 1] == 1)
+            count++;
+        if (j + 1 < n && i + 1 < m && board[i + 1][j + 1] == 1)
+            count++;
+        if (i + 1 < m && board[i + 1][j] == 1)
+            count++;
+        if (i + 1 < m && j - 1 >= 0 && board[i + 1][j - 1] == 1)
+            count++;
+        if (j - 1 >= 0 && (board[i][j - 1] == 1 || board[i][j - 1] == 3))
+            count++;
+        if (i - 1 >= 0 && j - 1 >= 0 && (board[i - 1][j - 1] == 1 || board[i - 1][j - 1] == 3))
+            count++;
+        if (i - 1 >= 0 && (board[i - 1][j] == 1 || board[i - 1][j] == 3))
+            count++;
+        if (i - 1 >= 0 && j + 1 < n && (board[i - 1][j + 1] == 1 || board[i - 1][j + 1] == 3))
+            count++;
+        return count;
 
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
-        }
-        return prime;
     }
 
     private static class InputReader {

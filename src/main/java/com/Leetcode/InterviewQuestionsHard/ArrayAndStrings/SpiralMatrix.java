@@ -1,75 +1,40 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.ArrayAndStrings;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
-public class InterviewQuestion {
+public class SpiralMatrix {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
+        int m = input.readInt();
+        int n = input.readInt();
+        int[][] matrix = new int[m][n];
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < m; i++)
+            matrix[i] = input.readIntArray(n);
+        int startR = 0, startC = 0;
+        int endR = m - 1, endC = n - 1;
+        while (startR <= endR && startC <= endC) {
+            for (int c = startC; c <= endC; c++)
+                list.add(matrix[startR][c]);
+            for (int r = startR + 1; r <= endR; r++)
+                list.add(matrix[r][endC]);
+            if (startR < endR && startC < endC) {
+                for (int c = endC - 1; c >= startC; c--)
+                    list.add(matrix[endR][c]);
+                for (int r = endR - 1; r > startR; r--)
+                    list.add(matrix[r][startC]);
             }
+            startR++;
+            startC++;
+            endR--;
+            endC--;
         }
-        System.out.println(count);
-
-
+        out.printLine(list);
         out.close();
-    }
-
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
-        }
-        return prime;
     }
 
     private static class InputReader {

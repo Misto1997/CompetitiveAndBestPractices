@@ -1,76 +1,87 @@
-package com.practice;
+package com.hackerrank;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
-public class InterviewQuestion {
+public class BobMaze {
+    private static int min=Integer.MAX_VALUE;
+
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
+        int x = input.readInt();
+        int y = input.readInt();
+        List<List<Integer>> list = new ArrayList<>();
+        for (int j = 0; j < 3; j++) {
+            List<Integer> l = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                int kk=input.readInt();
+                l.add(kk);
             }
+            list.add(new ArrayList<>(l));
         }
-        System.out.println(count);
-
+        System.out.println(minMoves(list, x, y));
 
         out.close();
     }
 
+    public static int minMoves(List<List<Integer>> maze, int x, int y) {
+        int i=0,j=0;
+        int coinCount=0;
+        int row=maze.size();
+        int column=maze.get(0).size();
+        int[][] ar=new int[row][column];
+        boolean[][] visited=new boolean[row][column];
 
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
+        for(List<Integer> list:maze){
+            for(int val:list){
+                ar[i][j]=val;
+                j++;
+            }
+            i++;
+            j=0;
         }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
+        for(i=0;i<row;i++){
+            for(j=0;j<column;j++){
+                if(ar[i][j]==2)
+                    coinCount++;
 
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
             }
         }
-        return prime;
+        allSortedPathSolution(ar,visited,0,0,x,y,row,column,coinCount,0);
+
+        if(min!=Integer.MAX_VALUE)
+            return min;
+        else
+            return -1;
+
     }
+
+    private static void allSortedPathSolution(int[][] ar,boolean[][] visited,int bobX,int bobY,int AliceX,int AliceY,int row,int column,int coinCount,int shortestPath){
+        if(bobX<0 || bobX>=row || bobY<0 || bobY >=column || ar[bobX][bobY]==1 || visited[bobX][bobY]==true)
+            return;
+
+        if(bobX==AliceX && bobY==AliceY && coinCount==0){
+            min=Integer.min(min,shortestPath);
+            return;
+        }
+        if(ar[bobX][bobY]==2)
+            coinCount--;
+        visited[bobX][bobY]=true;
+
+        allSortedPathSolution(ar,visited,bobX+1,bobY,AliceX,AliceY,row,column,coinCount,shortestPath+1);
+        allSortedPathSolution(ar,visited,bobX,bobY+1,AliceX,AliceY,row,column,coinCount,shortestPath+1);
+        allSortedPathSolution(ar,visited,bobX,bobY-1,AliceX,AliceY,row,column,coinCount,shortestPath+1);
+        allSortedPathSolution(ar,visited,bobX-1,bobY,AliceX,AliceY,row,column,coinCount,shortestPath+1);
+        visited[bobX][bobY]=false;
+    }
+
+
+  /*  private static int minMoves(int[][] ar, int x, int y) {
+        int min
+    }*/
 
     private static class InputReader {
         private InputStream stream;

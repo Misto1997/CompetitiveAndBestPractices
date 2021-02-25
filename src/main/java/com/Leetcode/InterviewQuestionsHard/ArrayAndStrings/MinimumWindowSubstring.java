@@ -1,75 +1,50 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.ArrayAndStrings;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class MinimumWindowSubstring {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
-            }
-        }
-        System.out.println(count);
+        String s = input.readString();
+        String t = input.readString();
+        System.out.println(minWindow(s, t));
 
 
         out.close();
     }
 
+    private static String minWindow(String s, String t) {
+        int[] ar = new int[128];
 
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
+        for (int i = 0; i < t.length(); i++) {
+            ar[t.charAt(i)]++;
         }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
+        int counter = t.length(), minLength = Integer.MAX_VALUE;
+        int start = 0, end = 0, minStart = 0;
+        while (end < s.length()) {
+            char val = s.charAt(end);
+            if (ar[val] > 0)
+                counter--;
+            ar[val]--;
+            end++;
 
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
+            while (counter == 0) {
+                if (minLength > end - start) {
+                    minLength = end - start;
+                    minStart = start;
+                }
+                char val1 = s.charAt(start);
+                ar[val1]++;
+                if (ar[val1] > 0)
+                    counter++;
+                start++;
             }
         }
-        return prime;
+
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLength);
+
     }
 
     private static class InputReader {
@@ -87,6 +62,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -159,6 +142,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 

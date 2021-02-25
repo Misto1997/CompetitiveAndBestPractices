@@ -1,75 +1,37 @@
-package com.practice;
+package com.codechef;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.Set;
 
-public class InterviewQuestion {
+public class TeamName {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
+        int t = input.readInt();
+        while (t-- > 0) {
+            int n = input.readInt();
+            String[] str = input.readStringArray(n);
+            Set<String> set = new HashSet<>(Arrays.asList(str));
+            int goodNameNumber = 0;
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = i + 1; j < n; j++) {
+                    if (str[i].charAt(0) == str[j].charAt(0))
+                        continue;
+                    else if (str[i].substring(1).equals(str[j].substring(1)))
+                        continue;
+                    else if (set.contains(str[j].charAt(0) + str[i].substring(1)) ||
+                            set.contains(str[i].charAt(0) + str[j].substring(1)))
+                        continue;
+                    goodNameNumber += 2;
                 }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
             }
+            out.printLine(goodNameNumber);
         }
-        System.out.println(count);
-
-
         out.close();
-    }
 
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
-        }
-        return prime;
     }
 
     private static class InputReader {
@@ -87,6 +49,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }

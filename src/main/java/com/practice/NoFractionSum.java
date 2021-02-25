@@ -3,73 +3,42 @@ package com.practice;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class InterviewQuestion {
+public class NoFractionSum {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
+        int desired = input.readInt();
+        int peak = input.readInt();
+        int offPeak = input.readInt();
+        int peakNumber = 0, offPeakNumber = 0;
+        boolean flag = true;
+        if (peak >= offPeak) {
+            if (desired / peak > 4) {
+                peakNumber = 4;
+            } else {
+                peakNumber = desired / peak;
+            }
+            while (flag) {
+                if ((desired - (peakNumber * peak)) % offPeak == 0) {
+                    offPeakNumber = (desired - (peakNumber * peak)) / offPeak;
+                    break;
                 }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
+                peakNumber--;
+            }
+        } else {
+            offPeakNumber = desired / offPeak;
+            while (flag) {
+                if ((desired - (offPeakNumber * offPeak)) % peak == 0) {
+                    peakNumber = (desired - (offPeakNumber * offPeak)) / peak;
+                    break;
                 }
-                if (flag == true)
-                    count++;
+                offPeakNumber--;
             }
         }
-        System.out.println(count);
+        System.out.println(peakNumber + " " + offPeakNumber);
 
 
         out.close();
-    }
-
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
-        }
-        return prime;
     }
 
     private static class InputReader {

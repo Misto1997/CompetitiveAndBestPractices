@@ -1,75 +1,73 @@
-package com.practice;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class InterviewQuestion {
+public class ShortestPathToGetAllKeys {
+
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
-            }
-        }
-        System.out.println(count);
-
+        int row = input.readInt();
+        String[] grid = new String[row];
+        for (int i = 0; i < row; i++)
+            grid[i] = input.readString();
+        System.out.println(shortestPathAllKeys(grid));
 
         out.close();
     }
 
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
+    private static int shortestPathAllKeys(String[] grid) {
+        int x = -1, y = -1, row = grid.length, col = grid[0].length(), finalState = 0;
+        int steps = 0;
+        char[][] ar = new char[row][col];
+        boolean[][][] visited = new boolean[row][col][65];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                ar[i][j] = grid[i].charAt(j);
+                if (ar[i][j] == '@') {
+                    x = i;
+                    y = j;
+                }
+                if (ar[i][j] >= 'a' && ar[i][j] <= 'f')
+                    finalState |= (1 << (ar[i][j] - 'a'));
             }
         }
-        return prime;
+        int[][] dir = new int[][]{{1, 0, -1, 0}, {0, 1, 0, -1}};
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{x, y, 0});
+        visited[x][y][0] = true;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int cur[] = queue.poll();
+                if (cur[2] == finalState)
+                    return steps;
+                for (int i = 0; i < 4; i++) {
+                    int newX = cur[0] + dir[0][i];
+                    int newY = cur[1] + dir[1][i];
+                    int key = cur[2];
+                    if (newX < 0 || newX >= row || newY < 0 || newY >= col)
+                        continue;
+                    if (ar[newX][newY] == '#')
+                        continue;
+                    if (ar[newX][newY] >= 'A' && ar[newX][newY] <= 'F' && ((key >> ar[newX][newY] - 'A') & 1) == 0)
+                        continue;
+                    if (ar[newX][newY] >= 'a' && ar[newX][newY] <= 'f') {
+                        key |= (1 << (ar[newX][newY] - 'a'));
+                    }
+                    if (!visited[newX][newY][key]) {
+                        queue.add(new int[]{newX, newY, key});
+                        visited[newX][newY][key] = true;
+                    }
+                }
+            }
+            steps++;
+
+        }
+        return -1;
     }
 
     private static class InputReader {

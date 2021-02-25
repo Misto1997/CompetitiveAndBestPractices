@@ -1,75 +1,38 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.ArrayAndStrings;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 
-public class InterviewQuestion {
+public class FourSum2 {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
+        int i = input.readInt();
+        int j = input.readInt();
+        int k = input.readInt();
+        int l = input.readInt();
+        int[] A = input.readIntArray(i);
+        int[] B = input.readIntArray(j);
+        int[] C = input.readIntArray(k);
+        int[] D = input.readIntArray(l);
         int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int a = 0; a < k; a++) {
+            for (int b = 0; b < l; b++) {
+                int sum = C[a] + D[b];
+                map.put(sum, map.getOrDefault(sum, 0) + 1);
+            }
+        }
+        for (int a = 0; a < i; a++) {
+            for (int b = 0; b < j; b++) {
+                int sum = -1 * (A[a] + B[b]);
+                count += map.getOrDefault(sum, 0);
             }
         }
         System.out.println(count);
-
-
         out.close();
-    }
-
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
-        if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
-            }
-        }
-        return prime;
     }
 
     private static class InputReader {

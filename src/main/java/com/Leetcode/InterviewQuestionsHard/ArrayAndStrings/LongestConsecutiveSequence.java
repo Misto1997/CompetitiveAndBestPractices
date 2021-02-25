@@ -1,75 +1,45 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.ArrayAndStrings;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class InterviewQuestion {
+public class LongestConsecutiveSequence {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int number = input.readInt();
-        int count = 0;
-        boolean[] prime = seive(10000);
-        for (int i = 2; i <= number; i++) {
-            boolean flag = true;
-            if (prime[i] == true) {
-                int num = rotateNum(i);
-                if (num == i) {
-                    count++;
-                    continue;
-                }
-                while (num != i) {
-                    if (prime[num] == false) {
-                        flag = false;
-                        break;
-                    }
-                    num = rotateNum(num);
-                }
-                if (flag == true)
-                    count++;
-            }
-        }
-        System.out.println(count);
+        int n = input.readInt();
+        int[] nums = input.readIntArray(n);
+        int ans = getMaxConsecutiveSequence(nums);
+        out.printLine(ans);
 
 
         out.close();
     }
 
-
-    private static int rotateNum(int number) {
-        /*int temp=number%10;
-        int digit=0;
-        int num=number;
-        while((num/=10) > 0){
-            digit++;
-        }
-        temp*=Math.pow(10,digit);
-        number/=10;
-        number+=temp;
-        return number;*/
-        int num = number;
-        int size = 1;
-        while ((num /= 10) > 0)
-            size++;
+    private static int getMaxConsecutiveSequence(int[] nums) {
+        int size = nums.length;
         if (size < 2)
-            return number;
-        int firstDigit = (int) ((int) number / Math.pow(10, size - 1));
-        number %= Math.pow(10, size - 1);
-        int result = number * 10 + firstDigit;
-        return result;
-    }
-
-    private static boolean[] seive(int n) {
-        boolean prime[] = new boolean[n + 1];
-        for (int i = 2; i <= n; i++)
-            prime[i] = true;
-        for (int p = 2; p * p <= n; p++) {
-            if (prime[p] == true) {
-                for (int i = p * p; i <= n; i += p)
-                    prime[i] = false;
+            return size;
+        Set<Integer> set = new TreeSet<>();
+        for (int i : nums)
+            set.add(i);
+        int max = 0, currentMax = 0;
+        for (Integer i : set) {
+            if (set.contains(i - 1))
+                currentMax++;
+            else {
+                if (currentMax > max)
+                    max = currentMax;
+                currentMax = 0;
             }
         }
-        return prime;
+        if (currentMax > max)
+            max = currentMax;
+        return max + 1;
+
     }
 
     private static class InputReader {
@@ -87,6 +57,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -265,3 +243,5 @@ public class InterviewQuestion {
         }
     }
 }
+
+
