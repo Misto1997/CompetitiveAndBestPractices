@@ -1,19 +1,37 @@
 package com.practice;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.Set;
 
-
-public class InterviewQuestion {
-
+public class SedMax {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-
-
+        int t = input.readInt();
+        while (t-- > 0) {
+            int n = input.readInt();
+            long[] ar = input.readLongArray(n);
+            Set<Long> set = new HashSet<>();
+            for (int i = 0; i < n - 1; i++) {
+                long min = 0;
+                long max = ar[i];
+                for (int j = i + 1; j < n; j++) {
+                    if (ar[j] >= max) {
+                        min = max;
+                        max = ar[j];
+                        set.add(max - min);
+                    } else if (ar[j] > min) {
+                        min = ar[j];
+                        set.add(max - min);
+                    }
+                }
+            }
+            out.printLine(set.size());
+        }
         out.close();
     }
-
 
     private static class InputReader {
         private InputStream stream;
@@ -30,6 +48,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -102,6 +128,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 

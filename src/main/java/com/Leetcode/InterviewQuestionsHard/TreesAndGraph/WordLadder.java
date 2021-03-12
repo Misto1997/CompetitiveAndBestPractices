@@ -1,19 +1,18 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.TreesAndGraph;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class InterviewQuestion {
-
+public class WordLadder {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-
-
+        int t = input.readInt();
+        while (t-- > 0) {
+            out.printLine();
+        }
         out.close();
     }
-
 
     private static class InputReader {
         private InputStream stream;
@@ -30,6 +29,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -102,6 +109,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 

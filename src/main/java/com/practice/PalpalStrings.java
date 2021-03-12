@@ -1,19 +1,54 @@
 package com.practice;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-
-public class InterviewQuestion {
-
+public class PalpalStrings {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-
-
+        int t = input.readInt();
+        while (t-- > 0) {
+            String s = input.readString();
+            if (s.length() < 2)
+                out.printLine("NO");
+            else {
+                char[] chars = s.toCharArray();
+                Arrays.sort(chars);
+                int evenCount = 0;
+                int odd1 = 0;
+                int count = 1;
+                for (int i = 1; i < chars.length; i++) {
+                    if (chars[i] == chars[i - 1])
+                        count++;
+                    else if (count == 1) {
+                        odd1++;
+                    } else if (count % 2 == 0) {
+                        evenCount += count / 2;
+                        count = 1;
+                    } else {
+                        evenCount += count / 2;
+                        odd1++;
+                        count = 1;
+                    }
+                }
+                if (count % 2 == 0)
+                    evenCount += count / 2;
+                else if (count == 1)
+                    odd1++;
+                else if(count>2){
+                    evenCount += count / 2;
+                    odd1++;
+                }
+                if (odd1 <= evenCount)
+                    out.printLine("YES");
+                else
+                    out.printLine("NO");
+            }
+        }
         out.close();
     }
-
 
     private static class InputReader {
         private InputStream stream;
@@ -30,6 +65,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -102,6 +145,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 

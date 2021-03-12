@@ -2,16 +2,70 @@ package com.Leetcode.InterviewQuestionsHard.LinkedList;
 
 import java.io.*;
 import java.util.InputMismatchException;
+import java.util.PriorityQueue;
 
 public class MergeKSortedLists {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int t = input.readInt();
-        while (t-- > 0) {
-            out.printLine();
-        }
+        int n = input.readInt();
+        ListNode[] lists = new ListNode[n];
+        //insert nodes in list
+        ListNode node = mergeKLists(lists);
+
         out.close();
+    }
+
+    public static ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0)
+            return null;
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(lists.length, (a, b) -> a.val - b.val);
+        ListNode dummy = new ListNode(0);
+        ListNode tail=dummy;
+
+        for (ListNode node:lists)
+            if (node!=null)
+                queue.add(node);
+
+        while (!queue.isEmpty()){
+            tail.next=queue.poll();
+            tail=tail.next;
+
+            if (tail.next!=null)
+                queue.add(tail.next);
+        }
+        return dummy.next;
+    }
+
+    private static ListNode sortNodes(ListNode currentNode, ListNode masterNode) {
+        if (masterNode == null)
+            return currentNode;
+        if (currentNode == null)
+            return masterNode;
+        if (currentNode.val <= masterNode.val) {
+            currentNode.next = sortNodes(currentNode.next, masterNode);
+            return currentNode;
+        } else {
+            masterNode.next = sortNodes(currentNode, masterNode.next);
+            return masterNode;
+        }
+    }
+
+    private static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
     }
 
     private static class InputReader {

@@ -1,19 +1,70 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.LinkedList;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class InterviewQuestion {
-
+public class SortList {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
+        ListNode head = new ListNode(2);
+        head.next = new ListNode(3);
+        head.next.next = new ListNode(1);
+        head.next.next.next = new ListNode(5);
+        head.next.next.next.next = new ListNode(4);
 
-
+        ListNode node = sortList(head);
+        while (node != null) {
+            System.out.println(node.val);
+            node=node.next;
+        }
         out.close();
     }
 
+    public static ListNode sortList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode slow = head, fast = head,temp=head;
+        while (fast != null && fast.next != null) {
+            temp = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        temp.next = null;
+        ListNode left = sortList(head);
+        ListNode right = sortList(slow);
+        return merge(left, right);
+    }
+
+    private static ListNode merge(ListNode list1, ListNode list2) {
+        ListNode dummyHead = new ListNode();
+        ListNode tail = dummyHead;
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                list1 = list1.next;
+                tail = tail.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+                tail = tail.next;
+            }
+        }
+        tail.next = (list1 != null) ? list1 : list2;
+        return dummyHead.next;
+    }
+
+    static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        };
+
+        ListNode(int val) {
+            this.val = val;
+        }
+    }
 
     private static class InputReader {
         private InputStream stream;
@@ -30,6 +81,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -102,6 +161,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 

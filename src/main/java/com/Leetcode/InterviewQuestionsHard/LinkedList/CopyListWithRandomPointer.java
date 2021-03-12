@@ -1,19 +1,58 @@
-package com.practice;
+package com.Leetcode.InterviewQuestionsHard.LinkedList;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class InterviewQuestion {
-
+public class CopyListWithRandomPointer {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
+        ListNode head = new ListNode(1);
+        //enter further nodes here....
 
-
+        copyRandomList(head);
         out.close();
     }
 
+    private static ListNode copyRandomList(ListNode head) {
+        if (head == null)
+            return null;
+        ListNode current = head;
+        ListNode temp;
+        while (current != null) {
+            temp = current.next;
+            current.next = new ListNode(current.val);
+            current.next.next = temp;
+            current = temp;
+        }
+        current = head;
+        while (current != null && current.next != null) {
+            current.next.random = current.random != null ? current.random.next : current.random;
+            current = current.next.next;
+        }
+        current = head;
+        temp = current.next;
+        ListNode newHead = temp;
+        current.next = current.next.next;
+        current = current.next;
+        while (current != null && current.next != null) {
+            temp.next = temp.next.next;
+            current.next = current.next.next;
+            current = current.next;
+            temp = temp.next;
+        }
+        return newHead;
+    }
+
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode random;
+
+        ListNode(int val) {
+            this.val = val;
+        }
+    }
 
     private static class InputReader {
         private InputStream stream;
@@ -30,6 +69,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -102,6 +149,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 

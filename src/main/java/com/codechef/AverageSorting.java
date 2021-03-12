@@ -1,19 +1,31 @@
-package com.practice;
+package com.codechef;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class InterviewQuestion {
-
+public class AverageSorting {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
+        int t = input.readInt();
 
-
+        while (t-- > 0) {
+            int n = input.readInt();
+            long[] ar = input.readLongArray(n);
+            boolean flag = true;
+            for (int i = 1; i < n; i++) {
+                if (ar[i] > ar[i - 1]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                out.printLine("NO");
+            else
+                out.printLine("YES");
+        }
         out.close();
     }
-
 
     private static class InputReader {
         private InputStream stream;
@@ -30,6 +42,14 @@ public class InterviewQuestion {
             int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
             }
             return a;
         }
@@ -102,6 +122,18 @@ public class InterviewQuestion {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
             return res.toString();
         }
 
