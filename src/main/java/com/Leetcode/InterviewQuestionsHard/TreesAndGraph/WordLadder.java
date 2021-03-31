@@ -1,17 +1,82 @@
 package com.Leetcode.InterviewQuestionsHard.TreesAndGraph;
 
 import java.io.*;
-import java.util.InputMismatchException;
+import java.util.*;
 
 public class WordLadder {
     public static void main(String[] args) {
         InputReader input = new InputReader(System.in);
         OutputWriter out = new OutputWriter(System.out);
-        int t = input.readInt();
-        while (t-- > 0) {
-            out.printLine();
+        String beginWord = input.readString();
+        String endWord = input.readString();
+        List<String> wordList = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            wordList.add(input.readString());
         }
+        out.printLine(ladderLength(beginWord, endWord, wordList));
         out.close();
+    }
+
+    private static int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> set1 = new HashSet<>(wordList);
+        Set<String> set2 = new HashSet<>(wordList);
+        if (!set1.contains(endWord))
+            return 0;
+        Queue<String> fromStart = new LinkedList<>();
+        fromStart.offer(beginWord);
+        Queue<String> fromEnd = new LinkedList<>();
+        fromEnd.offer(endWord);
+        Map<String, Boolean> map = new HashMap<>();
+        int counter = 2;
+        while (!fromStart.isEmpty() && !fromEnd.isEmpty()) {
+            int size = fromStart.size();
+            for (int i = 0; i < size; i++) {
+                char[] charArray = fromStart.poll().toCharArray();
+                for (int j = 0; j < charArray.length; j++) {
+                    char originalChar = charArray[j];
+                    for (char k = 'a'; k <= 'z'; k++) {
+                        if (k == originalChar)
+                            continue;
+                        charArray[j] = k;
+                        if (String.valueOf(charArray).equals(endWord))
+                            return counter;
+                        if (set1.contains(String.valueOf(charArray))) {
+                            if (map.getOrDefault(String.valueOf(charArray), false) == true)
+                                return counter;
+                            set1.remove(String.valueOf(charArray));
+                            map.put(String.valueOf(charArray), true);
+                            fromStart.add(String.valueOf(charArray));
+                        }
+                    }
+                    charArray[j] = originalChar;
+                }
+            }
+            counter++;
+            size = fromEnd.size();
+            for (int i = 0; i < size; i++) {
+                char[] charArray = fromEnd.poll().toCharArray();
+                for (int j = 0; j < charArray.length; j++) {
+                    char originalChar = charArray[j];
+                    for (char k = 'a'; k <= 'z'; k++) {
+                        if (k == originalChar)
+                            continue;
+                        charArray[j] = k;
+                        if (String.valueOf(charArray).equals(beginWord))
+                            return counter;
+                        if (set2.contains(String.valueOf(charArray))) {
+                            if (map.getOrDefault(String.valueOf(charArray), false) == true)
+                                return counter;
+                            set2.remove(String.valueOf(charArray));
+                            map.put(String.valueOf(charArray), true);
+                            fromEnd.add(String.valueOf(charArray));
+                        }
+                    }
+                    charArray[j] = originalChar;
+                }
+            }
+            counter++;
+        }
+        return 0;
     }
 
     private static class InputReader {
