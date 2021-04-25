@@ -1,0 +1,265 @@
+package com.Leetcode.InterviewQuestionsHard.TreesAndGraph;
+
+import java.io.*;
+import java.util.InputMismatchException;
+
+public class LongestIncreasingPathInAMatrix {
+    static int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    private static class InputReader {
+
+        public static void main(String[] args) {
+            InputReader input = new InputReader(System.in);
+            OutputWriter out = new OutputWriter(System.out);
+            int m = input.readInt();
+            int n = input.readInt();
+            int[][] matrix = new int[m][n];
+            for (int i = 0; i < m; i++) {
+                matrix[i] = input.readIntArray(n);
+            }
+            out.printLine(longestIncreasingPath(matrix));
+            out.close();
+        }
+
+        private static int longestIncreasingPath(int[][] matrix) {
+            if(matrix.length == 0) return 0;
+            int m = matrix.length, n = matrix[0].length;
+            int[][] dp = new int[m][n];
+            int max = 1;
+            for(int i = 0; i < m; i++) {
+                for(int j = 0; j < n; j++) {
+                    int len = dfs(matrix, i, j, m, n, dp);
+                    max = Math.max(max, len);
+                }
+            }
+            return max;
+        }
+
+        public static int dfs(int[][] matrix, int i, int j, int m, int n, int[][] dp) {
+            if(dp[i][j] != 0) return dp[i][j];
+            int max = 1;
+            for(int[] dir: dirs) {
+                int x = i + dir[0], y = j + dir[1];
+                if(x < 0 || x >= m || y < 0 || y >= n || matrix[x][y] <= matrix[i][j]) continue;
+                int len = 1 + dfs(matrix, x, y, m, n, dp);
+                max = Math.max(max, len);
+            }
+            dp[i][j] = max;
+            return max;
+        }
+
+        private InputStream stream;
+        private byte[] buf = new byte[1024];
+        private int curChar;
+        private int numChars;
+        private SpaceCharFilter filter;
+
+        public int[] readIntArray(int n) {
+            int a[] = new int[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readInt();
+            }
+            return a;
+        }
+
+        public String[] readStringArray(int n) {
+            String a[] = new String[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readString();
+            }
+            return a;
+        }
+
+        public char[] readCharArray(int n) {
+            char a[] = new char[n];
+            for (int i = 0; i < n; i++)
+                a[i] = readString().charAt(0);
+            return a;
+        }
+
+        public double[] readDoubleArray(int n) {
+            double a[] = new double[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readDouble();
+            }
+            return a;
+        }
+
+        public long[] readLongArray(int n) {
+            long a[] = new long[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = readLong();
+            }
+            return a;
+        }
+
+        public InputReader(InputStream stream) {
+            this.stream = stream;
+        }
+
+        public int read() {
+            if (numChars == -1)
+                throw new InputMismatchException();
+            if (curChar >= numChars) {
+                curChar = 0;
+                try {
+                    numChars = stream.read(buf);
+                } catch (IOException e) {
+                    throw new InputMismatchException();
+                }
+                if (numChars <= 0)
+                    return -1;
+            }
+            return buf[curChar++];
+        }
+
+        public int readInt() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            int res = 0;
+            do {
+                if (c < '0' || c > '9')
+                    throw new InputMismatchException();
+                res *= 10;
+                res += c - '0';
+                c = read();
+            } while (!isSpaceChar(c));
+            return res * sgn;
+        }
+
+        public String readString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (!isSpaceChar(c));
+            return res.toString();
+        }
+
+        public String readSpaceString() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            StringBuilder res = new StringBuilder();
+            do {
+                res.appendCodePoint(c);
+                c = read();
+            } while (c != '\n');
+            return res.toString();
+        }
+
+        public double readDouble() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            double res = 0;
+            while (!isSpaceChar(c) && c != '.') {
+                if (c == 'e' || c == 'E')
+                    return res * Math.pow(10, readInt());
+                if (c < '0' || c > '9')
+                    throw new InputMismatchException();
+                res *= 10;
+                res += c - '0';
+                c = read();
+            }
+            if (c == '.') {
+                c = read();
+                double m = 1;
+                while (!isSpaceChar(c)) {
+                    if (c == 'e' || c == 'E')
+                        return res * Math.pow(10, readInt());
+                    if (c < '0' || c > '9')
+                        throw new InputMismatchException();
+                    m /= 10;
+                    res += (c - '0') * m;
+                    c = read();
+                }
+            }
+            return res * sgn;
+        }
+
+        public long readLong() {
+            int c = read();
+            while (isSpaceChar(c))
+                c = read();
+            int sgn = 1;
+            if (c == '-') {
+                sgn = -1;
+                c = read();
+            }
+            long res = 0;
+            do {
+                if (c < '0' || c > '9')
+                    throw new InputMismatchException();
+                res *= 10;
+                res += c - '0';
+                c = read();
+            } while (!isSpaceChar(c));
+            return res * sgn;
+        }
+
+        public boolean isSpaceChar(int c) {
+            if (filter != null)
+                return filter.isSpaceChar(c);
+            return c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == -1;
+        }
+
+        public String next() {
+            return readString();
+        }
+
+        public interface SpaceCharFilter {
+            public boolean isSpaceChar(int ch);
+        }
+    }
+
+    private static class OutputWriter {
+        private final PrintWriter writer;
+
+        public OutputWriter(OutputStream outputStream) {
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+        }
+
+        public OutputWriter(Writer writer) {
+            this.writer = new PrintWriter(writer);
+        }
+
+        public void print(Object... objects) {
+            for (int i = 0; i < objects.length; i++) {
+                if (i != 0)
+                    writer.print(' ');
+                writer.print(objects[i]);
+            }
+        }
+
+        public void printLine(Object... objects) {
+            print(objects);
+            writer.println();
+        }
+
+        public void close() {
+            writer.close();
+        }
+
+        public void flush() {
+            writer.flush();
+        }
+    }
+}
+
+
+
