@@ -1,53 +1,51 @@
 package com.Leetcode.InterviewQuestionsHard.Backtracking;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 
-public class PalindromePartitioning {
-
+class WildcardMatching {
     private static class InputReader {
+
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            String s = input.readString();
-            List<List<String>> list = partition(s);
-            out.printLine(list);
+            String s = "acdcb";// input.readString();
+            String p = "a*c?b";// input.readString();
+            out.print(isMatch(s, p));
             out.close();
         }
 
-        private static List<List<String>> partition(String s) {
-            List<List<String>> list = new ArrayList<>();
-            DFS(0, list, s, new ArrayList());
-            return list;
+        private static boolean isMatch(String s, String p) {
+            if (s.isEmpty() && p.isEmpty())
+                return true;
+            if (!s.isEmpty() && p.isEmpty())
+                return false;
+            return checkRegex(s, p);
         }
-
-        private static void DFS(int start, List<List<String>> list, String s, List<String> currentList) {
-            if (start >= s.length()) {
-                list.add(new ArrayList<>(currentList));
-            }
-            for (int end = start; end < s.length(); end++) {
-                if (isPalindrome(start, end, s)) {
-                    currentList.add(s.substring(start, end + 1));
-                    DFS(end + 1, list, s, currentList);
-                    currentList.remove(currentList.size() - 1);
-                }
-            }
-        }
-
-        private static boolean isPalindrome(int start, int end, String s) {
-            while (start < end) {
-                if (s.charAt(start) != s.charAt(end)) {
+        private static boolean checkRegex(String s, String p) {
+            int sCounter = 0, pCounter = 0, lastMatchIndex = 0, restartIndex = -1;
+            while (sCounter < s.length()) {
+                if (pCounter < p.length() && p.charAt(pCounter) == '*') {
+                    restartIndex = pCounter;
+                    lastMatchIndex = sCounter;
+                    pCounter += 1;
+                } else if (pCounter < p.length() && (p.charAt(pCounter) == '?' || p.charAt(pCounter) == s.charAt(sCounter))) {
+                    pCounter += 1;
+                    sCounter += 1;
+                } else if (restartIndex != -1) {
+                    pCounter = restartIndex + 1;
+                    sCounter = lastMatchIndex + 1;
+                    lastMatchIndex += 1;
+                } else
                     return false;
-                }
-                start++;
-                end--;
-            }
-            return true;
-        }
 
+            }
+            while (pCounter < p.length() && p.charAt(pCounter) == '*') {
+                pCounter += 1;
+            }
+            return pCounter == p.length();
+        }
 
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -260,7 +258,6 @@ public class PalindromePartitioning {
             writer.flush();
         }
     }
+
 }
-
-
 

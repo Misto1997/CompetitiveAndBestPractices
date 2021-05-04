@@ -5,49 +5,42 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
-public class PalindromePartitioning {
-
+class RemoveInvalidParentheses {
     private static class InputReader {
+
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
             String s = input.readString();
-            List<List<String>> list = partition(s);
+            List<String> list = removeInvalidParentheses(s);
             out.printLine(list);
+
             out.close();
         }
 
-        private static List<List<String>> partition(String s) {
-            List<List<String>> list = new ArrayList<>();
-            DFS(0, list, s, new ArrayList());
-            return list;
+        private static List<String> removeInvalidParentheses(String s) {
+            List<String> ans = new ArrayList<>();
+            remove(s, ans, 0, 0, new char[]{'(', ')'});
+            return ans;
         }
 
-        private static void DFS(int start, List<List<String>> list, String s, List<String> currentList) {
-            if (start >= s.length()) {
-                list.add(new ArrayList<>(currentList));
+        private static void remove(String s, List<String> ans, int last_i, int last_j, char[] par) {
+            for (int stack = 0, i = last_i; i < s.length(); ++i) {
+                if (s.charAt(i) == par[0]) stack++;
+                if (s.charAt(i) == par[1]) stack--;
+                if (stack >= 0) continue;
+                for (int j = last_j; j <= i; ++j)
+                    if (s.charAt(j) == par[1] && (j == last_j || s.charAt(j - 1) != par[1]))
+                        remove(s.substring(0, j) + s.substring(j + 1, s.length()), ans, i, j, par);
+                return;
             }
-            for (int end = start; end < s.length(); end++) {
-                if (isPalindrome(start, end, s)) {
-                    currentList.add(s.substring(start, end + 1));
-                    DFS(end + 1, list, s, currentList);
-                    currentList.remove(currentList.size() - 1);
-                }
-            }
+            String reversed = new StringBuilder(s).reverse().toString();
+            if (par[0] == '(')
+                remove(reversed, ans, 0, 0, new char[]{')', '('});
+            else
+                ans.add(reversed);
         }
-
-        private static boolean isPalindrome(int start, int end, String s) {
-            while (start < end) {
-                if (s.charAt(start) != s.charAt(end)) {
-                    return false;
-                }
-                start++;
-                end--;
-            }
-            return true;
-        }
-
 
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -260,7 +253,6 @@ public class PalindromePartitioning {
             writer.flush();
         }
     }
+
 }
-
-
 

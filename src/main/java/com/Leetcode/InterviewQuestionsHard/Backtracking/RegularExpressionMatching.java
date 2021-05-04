@@ -1,53 +1,47 @@
 package com.Leetcode.InterviewQuestionsHard.Backtracking;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 
-public class PalindromePartitioning {
-
+class RegularExpressionMatching {
     private static class InputReader {
+
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
             String s = input.readString();
-            List<List<String>> list = partition(s);
-            out.printLine(list);
+            String p = input.readString();
+            out.printLine(isMatch(s, p));
             out.close();
         }
 
-        private static List<List<String>> partition(String s) {
-            List<List<String>> list = new ArrayList<>();
-            DFS(0, list, s, new ArrayList());
-            return list;
-        }
+        private static boolean isMatch(String s, String p) {
+            if (p.isEmpty())
+                return s.isEmpty();
+            boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+            dp[0][0] = true;
 
-        private static void DFS(int start, List<List<String>> list, String s, List<String> currentList) {
-            if (start >= s.length()) {
-                list.add(new ArrayList<>(currentList));
+            for (int i = 1; i <= p.length(); i++) {
+                if (p.charAt(i - 1) == '*')
+                    dp[0][i] = dp[0][i - 2];
             }
-            for (int end = start; end < s.length(); end++) {
-                if (isPalindrome(start, end, s)) {
-                    currentList.add(s.substring(start, end + 1));
-                    DFS(end + 1, list, s, currentList);
-                    currentList.remove(currentList.size() - 1);
+
+
+            for (int i = 1; i <= s.length(); i++) {
+                for (int j = 1; j <= p.length(); j++) {
+                    if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '.') {
+                        dp[i][j] = dp[i - 1][j - 1];
+                    } else if (p.charAt(j - 1) == '*') {
+                        dp[i][j] = dp[i][j - 2];
+                        if (s.charAt(i - 1) == p.charAt(j - 2) || p.charAt(j-2)=='.') {
+                            dp[i][j] = dp[i][j] || dp[i - 1][j];
+                        }
+                    }
                 }
             }
+            return dp[s.length()][p.length()];
         }
-
-        private static boolean isPalindrome(int start, int end, String s) {
-            while (start < end) {
-                if (s.charAt(start) != s.charAt(end)) {
-                    return false;
-                }
-                start++;
-                end--;
-            }
-            return true;
-        }
-
 
         private InputStream stream;
         private byte[] buf = new byte[1024];
@@ -260,7 +254,6 @@ public class PalindromePartitioning {
             writer.flush();
         }
     }
+
 }
-
-
 

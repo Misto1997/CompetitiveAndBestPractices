@@ -1,51 +1,17 @@
-package com.Leetcode.InterviewQuestionsHard.Backtracking;
+package com.Leetcode.InterviewQuestionsHard.SortingAndSearching;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 
-public class PalindromePartitioning {
+public class WiggleSort2 {
 
     private static class InputReader {
+
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            String s = input.readString();
-            List<List<String>> list = partition(s);
-            out.printLine(list);
             out.close();
-        }
-
-        private static List<List<String>> partition(String s) {
-            List<List<String>> list = new ArrayList<>();
-            DFS(0, list, s, new ArrayList());
-            return list;
-        }
-
-        private static void DFS(int start, List<List<String>> list, String s, List<String> currentList) {
-            if (start >= s.length()) {
-                list.add(new ArrayList<>(currentList));
-            }
-            for (int end = start; end < s.length(); end++) {
-                if (isPalindrome(start, end, s)) {
-                    currentList.add(s.substring(start, end + 1));
-                    DFS(end + 1, list, s, currentList);
-                    currentList.remove(currentList.size() - 1);
-                }
-            }
-        }
-
-        private static boolean isPalindrome(int start, int end, String s) {
-            while (start < end) {
-                if (s.charAt(start) != s.charAt(end)) {
-                    return false;
-                }
-                start++;
-                end--;
-            }
-            return true;
         }
 
 
@@ -53,7 +19,7 @@ public class PalindromePartitioning {
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
-        private SpaceCharFilter filter;
+        private InputReader.SpaceCharFilter filter;
 
         public int[] readIntArray(int n) {
             int a[] = new int[n];
@@ -260,7 +226,7 @@ public class PalindromePartitioning {
             writer.flush();
         }
     }
-}
 
+}
 
 

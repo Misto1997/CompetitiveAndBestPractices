@@ -5,47 +5,84 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
-public class PalindromePartitioning {
+class TrieNode {
+    TrieNode[] childNode = new TrieNode[26];
+    String word;
+}
 
+class WordSearch2 {
     private static class InputReader {
+
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            String s = input.readString();
-            List<List<String>> list = partition(s);
+            int m = input.readInt();
+            int n = input.readInt();
+            char[][] board = new char[m][n];
+            for (int i = 0; i < m; i++) {
+                board[i] = input.readCharArray(n);
+            }
+            String[] words = input.readStringArray(3);
+            List<String> list = findWords(board, words);
             out.printLine(list);
             out.close();
         }
 
-        private static List<List<String>> partition(String s) {
-            List<List<String>> list = new ArrayList<>();
-            DFS(0, list, s, new ArrayList());
-            return list;
-        }
-
-        private static void DFS(int start, List<List<String>> list, String s, List<String> currentList) {
-            if (start >= s.length()) {
-                list.add(new ArrayList<>(currentList));
-            }
-            for (int end = start; end < s.length(); end++) {
-                if (isPalindrome(start, end, s)) {
-                    currentList.add(s.substring(start, end + 1));
-                    DFS(end + 1, list, s, currentList);
-                    currentList.remove(currentList.size() - 1);
+        private static List<String> findWords(char[][] board, String[] words) {
+            List<String> listOfWords = new ArrayList<>();
+            TrieNode root = buildTrieNode(words);
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                    dfs(i, j, board, listOfWords, root);
                 }
             }
+
+            return listOfWords;
         }
 
-        private static boolean isPalindrome(int start, int end, String s) {
-            while (start < end) {
-                if (s.charAt(start) != s.charAt(end)) {
-                    return false;
-                }
-                start++;
-                end--;
+        private static void dfs(int i, int j, char[][] board, List<String> listOfWords, TrieNode root) {
+            char currentChar = board[i][j];
+            int index = currentChar - 'a';
+            if (currentChar == '1' || root.childNode[index] == null)
+                return;
+            root = root.childNode[index];
+            if (root.word != null) {
+                listOfWords.add(root.word);
+                root.word = null;
             }
-            return true;
+            board[i][j] = '1';
+            if (i > 0) {
+                dfs(i - 1, j, board, listOfWords, root);
+            }
+            if (i < board.length - 1) {
+                dfs(i + 1, j, board, listOfWords, root);
+            }
+            if (j > 0) {
+                dfs(i, j - 1, board, listOfWords, root);
+            }
+            if (j < board[0].length - 1) {
+                dfs(i, j + 1, board, listOfWords, root);
+
+            }
+            board[i][j] = currentChar;
+
+        }
+
+        private static TrieNode buildTrieNode(String[] words) {
+            TrieNode root = new TrieNode();
+            for (String word : words) {
+                TrieNode temp = root;
+                for (char c : word.toCharArray()) {
+                    int index = c - 'a';
+                    if (temp.childNode[index] == null) {
+                        temp.childNode[index] = new TrieNode();
+                    }
+                    temp = temp.childNode[index];
+                }
+                temp.word = word;
+            }
+            return root;
         }
 
 
@@ -260,7 +297,6 @@ public class PalindromePartitioning {
             writer.flush();
         }
     }
+
 }
-
-
 
