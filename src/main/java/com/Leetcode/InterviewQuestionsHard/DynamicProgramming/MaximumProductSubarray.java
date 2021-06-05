@@ -1,110 +1,30 @@
-package com.Leetcode.InterviewQuestionsHard.SortingAndSearching;
+package com.Leetcode.InterviewQuestionsHard.DynamicProgramming;
 
 import java.io.*;
 import java.util.InputMismatchException;
-import java.util.Random;
 
-public class WiggleSort2 {
-
+public class MaximumProductSubarray {
     private static class InputReader {
-
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            int n = input.readInt();
-            int[] nums = input.readIntArray(n);
-            wiggleSort(nums);
-            for (int i = 0; i < nums.length; i++) {
-                out.print(nums[i] + " ");
+            int t = input.readInt();
+            while (t-- > 0) {
+                int n = input.readInt();
+                out.printLine(n);
             }
-
             out.close();
         }
-
-        public static void wiggleSort(int[] nums) {
-            int median = findKthLargest(nums, (nums.length + 1) / 2);
-            int n = nums.length;
-
-            int left = 0, i = 0, right = n - 1;
-
-            while (i <= right) {
-
-                if (nums[newIndex(i, n)] > median) {
-                    swap(nums, newIndex(left++, n), newIndex(i++, n));
-                } else if (nums[newIndex(i, n)] < median) {
-                    swap(nums, newIndex(right--, n), newIndex(i, n));
-                } else {
-                    i++;
-                }
-            }
-        }
-
-        private static void swap(int[] nums, int i, int j) {
-            int temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
-
-        }
-
-        private static int newIndex(int index, int n) {
-            return (1 + 2 * index) % (n | 1);
-        }
-
-        private static int findKthLargest(int[] nums, int k) {
-
-            shuffleTheArray(nums);
-            k = nums.length - k;
-            int left = 0, right = nums.length - 1;
-            while (left <= right) {
-                int j = partition(left, right, nums);
-                if (j < k)
-                    left = j + 1;
-                else if (j > k)
-                    right = j - 1;
-                else
-                    break;
-            }
-            return nums[k];
-
-        }
-
-
-        private static int partition(int left, int right, int[] nums) {
-            int pivot = nums[right];
-            int i = left;
-            for (int j = left; j < right; j++) {
-                if (nums[j] <= pivot) {
-                    int temp = nums[i];
-                    nums[i++] = nums[j];
-                    nums[j] = temp;
-                }
-            }
-            int temp = nums[i];
-            nums[i] = pivot;
-            nums[right] = temp;
-            return i;
-        }
-
-        private static void shuffleTheArray(int[] nums) {
-            Random random = new Random();
-            for (int i = 0; i < nums.length; i++) {
-                int j = random.nextInt(i + 1);
-                int temp = nums[i];
-                nums[i] = nums[j];
-                nums[j] = temp;
-            }
-        }
-
 
         private InputStream stream;
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
-        private InputReader.SpaceCharFilter filter;
+        private SpaceCharFilter filter;
 
         public int[] readIntArray(int n) {
-            int a[] = new int[n];
+            int[] a = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
             }
@@ -112,7 +32,7 @@ public class WiggleSort2 {
         }
 
         public String[] readStringArray(int n) {
-            String a[] = new String[n];
+            String[] a = new String[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readString();
             }
@@ -120,14 +40,14 @@ public class WiggleSort2 {
         }
 
         public char[] readCharArray(int n) {
-            char a[] = new char[n];
+            char[] a = new char[n];
             for (int i = 0; i < n; i++)
                 a[i] = readString().charAt(0);
             return a;
         }
 
         public double[] readDoubleArray(int n) {
-            double a[] = new double[n];
+            double[] a = new double[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readDouble();
             }
@@ -135,7 +55,7 @@ public class WiggleSort2 {
         }
 
         public long[] readLongArray(int n) {
-            long a[] = new long[n];
+            long[] a = new long[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readLong();
             }
@@ -272,7 +192,7 @@ public class WiggleSort2 {
         }
 
         public interface SpaceCharFilter {
-            public boolean isSpaceChar(int ch);
+            boolean isSpaceChar(int ch);
         }
     }
 
@@ -281,10 +201,6 @@ public class WiggleSort2 {
 
         public OutputWriter(OutputStream outputStream) {
             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
-        }
-
-        public OutputWriter(Writer writer) {
-            this.writer = new PrintWriter(writer);
         }
 
         public void print(Object... objects) {
@@ -309,6 +225,5 @@ public class WiggleSort2 {
         }
     }
 
+
 }
-
-

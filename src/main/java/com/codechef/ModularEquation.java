@@ -1,107 +1,127 @@
-package com.Leetcode.InterviewQuestionsHard.SortingAndSearching;
+package com.codechef;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
-import java.util.Random;
 
-public class WiggleSort2 {
-
+class ModularEquation {
     private static class InputReader {
 
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            int n = input.readInt();
-            int[] nums = input.readIntArray(n);
-            wiggleSort(nums);
-            for (int i = 0; i < nums.length; i++) {
-                out.print(nums[i] + " ");
+            int[] dp = calculateNoOFactors();
+            int t = input.readInt();
+            while (t-- > 0) {
+                int[] ar = dp.clone();
+                int n = input.readInt();
+                int m = input.readInt();
+                out.printLine(getPair2(n, m));
+                out.printLine(getPair6(n, m));
+                //out.printLine(getPair4(n, m));
             }
-
             out.close();
         }
 
-        public static void wiggleSort(int[] nums) {
-            int median = findKthLargest(nums, (nums.length + 1) / 2);
-            int n = nums.length;
-
-            int left = 0, i = 0, right = n - 1;
-
-            while (i <= right) {
-
-                if (nums[newIndex(i, n)] > median) {
-                    swap(nums, newIndex(left++, n), newIndex(i++, n));
-                } else if (nums[newIndex(i, n)] < median) {
-                    swap(nums, newIndex(right--, n), newIndex(i, n));
-                } else {
-                    i++;
+        private static long getPair2(int n, int m) {
+            long count = 0;
+            for (int i = 1; i < n; i++) {
+                for (int j = i + 1; j <= n; j++) {
+                    if ((m % i) % j == (m % j) % i) {
+                        count++;
+                    }
                 }
             }
+            return count;
         }
 
-        private static void swap(int[] nums, int i, int j) {
-            int temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
+        private static long getPair5(int n, int m, int[] ar1) {
+            long count = 0;
+            long oCount = 1;
 
-        }
-
-        private static int newIndex(int index, int n) {
-            return (1 + 2 * index) % (n | 1);
-        }
-
-        private static int findKthLargest(int[] nums, int k) {
-
-            shuffleTheArray(nums);
-            k = nums.length - k;
-            int left = 0, right = nums.length - 1;
-            while (left <= right) {
-                int j = partition(left, right, nums);
-                if (j < k)
-                    left = j + 1;
-                else if (j > k)
-                    right = j - 1;
-                else
-                    break;
+            for (int i = m > n ? m : n; i >= 2; i--) {
+                if (i <= (m > n ? n : m)) {
+                    count += ar1[m - m % i];
+                    oCount += 1;
+                }
+                ar1[m - m % i] -= 1;
             }
-            return nums[k];
-
-        }
-
-
-        private static int partition(int left, int right, int[] nums) {
-            int pivot = nums[right];
-            int i = left;
-            for (int j = left; j < right; j++) {
-                if (nums[j] <= pivot) {
-                    int temp = nums[i];
-                    nums[i++] = nums[j];
-                    nums[j] = temp;
+            if (n > m) {
+                for (int i = n; i > m; i--) {
+                    count += oCount;
+                    oCount += 1;
                 }
             }
-            int temp = nums[i];
-            nums[i] = pivot;
-            nums[right] = temp;
-            return i;
+            return count;
         }
 
-        private static void shuffleTheArray(int[] nums) {
-            Random random = new Random();
-            for (int i = 0; i < nums.length; i++) {
-                int j = random.nextInt(i + 1);
-                int temp = nums[i];
-                nums[i] = nums[j];
-                nums[j] = temp;
+        private static long getPair6(int n, int m) {
+            long count = 0;
+            long[] ar = new long[n + 1];
+            Arrays.fill(ar, 1);
+            for (int i = 2; i <= n; i++) {
+                int num = m % i;
+                count += ar[num];
+                for (int j = num; j <= n; j += i) {
+                    ar[j]++;
+                }
             }
+            return count;
         }
 
+        private static long getPair4(int n, int m) {
+            long count = 0;
+            long[] ar = new long[m + 1];
+
+            for (int i = 2; i <= n; i++) {
+                count += ar[m - m % i] + 1;
+                int num = (m / 2) + (i - (m / 2) % i);
+                ar[0] += 1;
+                for (int j = num; j <= m - m % i; j += i) {
+                    ar[j] += 1;
+                }
+            }
+            return count;
+        }
+
+        private static int[] calculateNoOFactors() {
+            int[] ar = new int[500001];
+            for (int i = 2; i < 500001; i++) {
+                for (int j = i; j < 500001; j += i)
+                    ar[j] += 1;
+            }
+            return ar;
+        }
+
+        private static long getPair3(int n, int m) {
+            long count = n - 1;
+            int size = n;
+            int size1 = n;
+            if (n > m) {
+                int gNumCount = n - m;
+                count += (gNumCount * (gNumCount - 1)) / 2;
+                count += gNumCount * (m - 1);
+                size = m;
+                size1 = m / 2;
+            }
+
+            for (int i = 2; i <= size1; i++) {
+                for (int j = i + 1; j <= size; j++) {
+                    if ((m % i) % j == (m % j) % i) {
+                        System.out.println(i + " " + j);
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
 
         private InputStream stream;
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
-        private InputReader.SpaceCharFilter filter;
+        private SpaceCharFilter filter;
 
         public int[] readIntArray(int n) {
             int a[] = new int[n];
@@ -310,5 +330,4 @@ public class WiggleSort2 {
     }
 
 }
-
 
