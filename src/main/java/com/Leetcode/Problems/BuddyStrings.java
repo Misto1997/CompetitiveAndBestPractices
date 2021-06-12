@@ -3,7 +3,7 @@ package com.Leetcode.Problems;
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class CalculateMoneyInLeetcodeBank {
+public class BuddyStrings {
 
     private static class InputReader {
 
@@ -11,24 +11,45 @@ public class CalculateMoneyInLeetcodeBank {
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            int n = input.readInt();
-            out.printLine(totalMoney(n));
-
+            String s = input.readString();
+            String goal = input.readString();
+            out.printLine(buddyStrings(s, goal));
             out.close();
         }
 
-        private static int totalMoney(int n) {
-            int fullWeeks = n / 7;
-            int partialDays = n % 7;
-            int sum = 0;
-            for (int i = 0; i < fullWeeks; i++) {
-                sum += 7 * (4 + i);
+        private static boolean buddyStrings(String s, String goal) {
+            if (s.length() != goal.length() || s.length() < 2)
+                return false;
+            if (s.equals(goal)) {
+                int[] charCount = new int[26];
+                for (int i = 0; i < s.length(); i++) {
+                    charCount[s.charAt(i) - 'a']++;
+                    if (charCount[s.charAt(i) - 'a'] > 1)
+                        return true;
+                }
+                return false;
             }
-            for (int i = 0; i < partialDays; i++) {
-                sum += fullWeeks + 1;
-                fullWeeks++;
+            char sa = 'a', sb = 'b', ga = 'c', gb = 'd';
+            int count = 0;
+            for (int i = 0; i < s.length(); i++) {
+                char a = s.charAt(i);
+                char b = goal.charAt(i);
+                if (count > 2)
+                    return false;
+                if (a != b && count == 0) {
+                    count++;
+                    sa = a;
+                    ga = b;
+                } else if (a != b && count == 1) {
+                    count++;
+                    sb = a;
+                    gb = b;
+                } else if (a != b)
+                    count++;
             }
-            return sum;
+            if (sa == gb && sb == ga)
+                return true;
+            return false;
         }
 
         private InputStream stream;
