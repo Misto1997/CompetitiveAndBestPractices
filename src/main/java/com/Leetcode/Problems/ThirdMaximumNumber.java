@@ -1,69 +1,68 @@
-package com.Leetcode.InterviewQuestionsHard.DynamicProgramming;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-public class MaximumProductSubarray {
-    private static class InputReader {
+public class ThirdMaximumNumber {
+    public static void main(String[] args) {
+        InputReader input = new InputReader(System.in);
+        OutputWriter out = new OutputWriter(System.out);
+        int n = input.readInt();
+        int[] nums = input.readIntArray(n);
+        out.printLine(thirdMax(nums));
 
-        public static void main(String[] args) {
-            InputReader input = new InputReader(System.in);
-            OutputWriter out = new OutputWriter(System.out);
-            int n = input.readInt();
-            int[] nums = input.readIntArray(n);
-            out.printLine(maxProduct(nums));
-            out.close();
-        }
+        out.close();
+    }
 
-        private static int maxProduct(int[] nums) {
-            int min = nums[0];
-            int max = nums[0];
-            int ans = nums[0];
-            for (int i = 1; i < nums.length; i++) {
-                if (nums[i] < 0) {
-                    int temp = max;
-                    max = min;
-                    min = temp;
-                }
-                max = Math.max(nums[i], nums[i] * max);
-                min = Math.min(nums[i], nums[i] * min);
-                ans = Math.max(ans, max);
+    private static int thirdMax(int[] nums) {
+        Integer one = null;
+        Integer two = null;
+        Integer three = null;
+        for (Integer i : nums) {
+            if (i.equals(one) || i.equals(two) || i.equals(three))
+                continue;
+            if (one == null || i > one) {
+                three = two;
+                two = one;
+                one = i;
+            } else if (two == null || i > two) {
+                three = two;
+                two = i;
+            } else if (three == null || i > three) {
+                three = i;
             }
-            return ans;
         }
+        return three == null ? one : three;
+    }
 
-
+    private static class InputReader {
         private InputStream stream;
         private byte[] buf = new byte[1024];
         private int curChar;
         private int numChars;
-        private SpaceCharFilter filter;
+        private InputReader.SpaceCharFilter filter;
+
+        public InputReader(InputStream stream) {
+            this.stream = stream;
+        }
 
         public int[] readIntArray(int n) {
-            int[] a = new int[n];
+            int a[] = new int[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readInt();
             }
             return a;
         }
 
-        public String[] readStringArray(int n) {
-            String[] a = new String[n];
-            for (int i = 0; i < n; i++) {
-                a[i] = readString();
-            }
-            return a;
-        }
-
         public char[] readCharArray(int n) {
-            char[] a = new char[n];
+            char a[] = new char[n];
             for (int i = 0; i < n; i++)
                 a[i] = readString().charAt(0);
             return a;
         }
 
         public double[] readDoubleArray(int n) {
-            double[] a = new double[n];
+            double a[] = new double[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readDouble();
             }
@@ -71,15 +70,11 @@ public class MaximumProductSubarray {
         }
 
         public long[] readLongArray(int n) {
-            long[] a = new long[n];
+            long a[] = new long[n];
             for (int i = 0; i < n; i++) {
                 a[i] = readLong();
             }
             return a;
-        }
-
-        public InputReader(InputStream stream) {
-            this.stream = stream;
         }
 
         public int read() {
@@ -127,18 +122,6 @@ public class MaximumProductSubarray {
                 res.appendCodePoint(c);
                 c = read();
             } while (!isSpaceChar(c));
-            return res.toString();
-        }
-
-        public String readSpaceString() {
-            int c = read();
-            while (isSpaceChar(c))
-                c = read();
-            StringBuilder res = new StringBuilder();
-            do {
-                res.appendCodePoint(c);
-                c = read();
-            } while (c != '\n');
             return res.toString();
         }
 
@@ -208,7 +191,7 @@ public class MaximumProductSubarray {
         }
 
         public interface SpaceCharFilter {
-            boolean isSpaceChar(int ch);
+            public boolean isSpaceChar(int ch);
         }
     }
 
@@ -217,6 +200,10 @@ public class MaximumProductSubarray {
 
         public OutputWriter(OutputStream outputStream) {
             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)));
+        }
+
+        public OutputWriter(Writer writer) {
+            this.writer = new PrintWriter(writer);
         }
 
         public void print(Object... objects) {
@@ -240,6 +227,4 @@ public class MaximumProductSubarray {
             writer.flush();
         }
     }
-
-
 }
