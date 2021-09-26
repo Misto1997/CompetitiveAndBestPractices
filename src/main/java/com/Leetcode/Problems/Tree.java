@@ -34,7 +34,7 @@ public class Tree {
         if (root == null)
             return;
         inOrder(root.left);
-        System.out.println(root.val);
+        System.out.print(root.val+" ");
         inOrder(root.right);
     }
 
