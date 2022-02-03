@@ -17,6 +17,7 @@ public class BottomViewOfBinaryTree {
     static BinaryTree root;
 
     public static void main(String[] args) {
+
         root = new BinaryTree(1);
         root.left = new BinaryTree(3);
         root.right = new BinaryTree(2);

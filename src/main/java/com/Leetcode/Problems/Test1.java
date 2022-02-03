@@ -11,16 +11,39 @@ class DoublyListNode {
 
 }
 
+class A{
+    A(){
+        System.out.println("A");
+    }
+     void set(){
+        System.out.println("A set");
+    }
+}
+
+class B extends A{
+    B(){
+        System.out.println("b");
+    }
+    void set(){
+        super.set();
+        System.out.println("b set");
+    }
+    void preset(){
+        System.out.println("B preset");
+    }
+}
+
 public class Test1 {
 
     public static void main(String[] args) {
-        DoublyListNode root = new DoublyListNode("a");
-        DoublyListNode node = new DoublyListNode("b");
-        root.forward = node;
-        node.back = root;
-        root = node;
-        System.out.println(root.url);
-        System.out.println(root.back.url);
+        B ob=new B();
+        ob.set();
+        ob.preset();
+        try{}
+        finally{
+
+        }
+
 
     }
 }
