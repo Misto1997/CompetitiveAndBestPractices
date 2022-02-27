@@ -1,4 +1,4 @@
-package com.design.pattern;
+package com.design_pattern;
 
 abstract class Computer {
     public abstract void ram();

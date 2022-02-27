@@ -1,4 +1,4 @@
-package com.design.pattern;
+package com.design_pattern;
 
 public class SingletonPatternTest {
     //Bill Pugh Singleton Implementation
