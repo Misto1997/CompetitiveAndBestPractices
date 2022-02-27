@@ -1,50 +1,77 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
-import java.util.InputMismatchException;
+import java.util.*;
 
+class Building implements Comparable<Building> {
+    int x;
+    int height;
+    boolean isStart;
 
-public class Test {
+    Building(int x, int height, boolean isStart) {
+        this.x = x;
+        this.height = height;
+        this.isStart = isStart;
+    }
+
+    @Override
+    public int compareTo(Building o) {
+        if (this.x != o.x)
+            return this.x - o.x;
+        return (this.isStart ? -this.height : this.height) - (o.isStart ? -o.height : o.height);
+    }
+}
+
+public class TheSkylineProblem {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-           /* int[][] coordinates=new int[3][2];
-            for(int i=0;i<3;i++){
-                coordinates[i]= input.readIntArray(2);
-            }*/
-            System.out.println(solution(4,new int[]{2,4,2,2,1,1,1}));
+            int n = input.readInt();
+            int[][] buildings = new int[n][3];
+            for (int i = 0; i < n; i++) {
+                buildings[i][0] = input.readInt();
+                buildings[i][1] = input.readInt();
+                buildings[i][2] = input.readInt();
+            }
+            List<List<Integer>> listofList = getSkyline(buildings);
+            out.print(listofList);
 
             out.close();
         }
 
-        static int solution(int n, int[] cabTripTime) {
+        private static List<List<Integer>> getSkyline(int[][] buildings) {
+            Building[] buildingsArr = new Building[2 * buildings.length];
+            int counter = 0;
+            for (int i = 0; i < buildings.length; i++) {
+                buildingsArr[counter] = new Building(buildings[i][0], buildings[i][2], true);
+                buildingsArr[counter + 1] = new Building(buildings[i][1], buildings[i][2], false);
+                counter += 2;
+            }
+            Arrays.sort(buildingsArr);
+            TreeMap<Integer, Integer> queue = new TreeMap<>();
+            queue.put(0, 1);
+            int prevMax = 0;
+            List<List<Integer>> listOfList = new ArrayList<>();
+            for (Building building : buildingsArr) {
+                if (building.isStart) {
+                    queue.put(building.height, queue.getOrDefault(building.height, 0) + 1);
+                } else {
+                    if (queue.get(building.height) == 1)
+                        queue.remove(building.height);
+                    else
+                        queue.put(building.height, queue.get(building.height) - 1);
+                }
+                int currentMax = queue.lastKey();
+                if (currentMax != prevMax) {
+                    listOfList.add(Arrays.asList(building.x, currentMax));
+                    prevMax = currentMax;
+                }
+            }
+            return listOfList;
 
-            int minTimeRequired=1;
-            int maxTimeRequired=1;
-            for(int val:cabTripTime){
-                if(maxTimeRequired < val)
-                    maxTimeRequired=val;
-            }
-            maxTimeRequired*=n;
-            while(minTimeRequired<maxTimeRequired){
-                int mid= minTimeRequired + (maxTimeRequired-minTimeRequired)/2;
-                int ridecompleted=findNumberOfRides(cabTripTime, mid);
-                if(ridecompleted<n)
-                    minTimeRequired=mid+1;
-                else
-                    maxTimeRequired=mid;
-            }
-            return maxTimeRequired;
-        }
 
-        private static int findNumberOfRides(int[] cabTripTime, int time){
-            int ridecompleted=0;
-            for(int i=0;i<cabTripTime.length;i++){
-                ridecompleted+=time/cabTripTime[i];
-            }
-            return ridecompleted;
         }
 
 

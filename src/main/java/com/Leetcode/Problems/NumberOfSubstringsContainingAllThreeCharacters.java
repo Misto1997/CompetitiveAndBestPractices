@@ -1,50 +1,34 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class Test {
+public class NumberOfSubstringsContainingAllThreeCharacters {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-           /* int[][] coordinates=new int[3][2];
-            for(int i=0;i<3;i++){
-                coordinates[i]= input.readIntArray(2);
-            }*/
-            System.out.println(solution(4,new int[]{2,4,2,2,1,1,1}));
+            String s = input.readString();
+            out.print(numberOfSubstrings(s));
 
             out.close();
         }
 
-        static int solution(int n, int[] cabTripTime) {
-
-            int minTimeRequired=1;
-            int maxTimeRequired=1;
-            for(int val:cabTripTime){
-                if(maxTimeRequired < val)
-                    maxTimeRequired=val;
+        private static int numberOfSubstrings(String s) {
+            int[] ar = new int[3];
+            int count = 0;
+            int end = 0;
+            int start = 0;
+            while (start <= end && end < s.length()) {
+                ar[s.charAt(end) - 'a']++;
+                while (ar[0] != 0 && ar[1] != 0 && ar[2] != 0) {
+                    count += (s.length()-start) - (end - start);
+                    ar[s.charAt(start++) - 'a']--;
+                }
+                end++;
             }
-            maxTimeRequired*=n;
-            while(minTimeRequired<maxTimeRequired){
-                int mid= minTimeRequired + (maxTimeRequired-minTimeRequired)/2;
-                int ridecompleted=findNumberOfRides(cabTripTime, mid);
-                if(ridecompleted<n)
-                    minTimeRequired=mid+1;
-                else
-                    maxTimeRequired=mid;
-            }
-            return maxTimeRequired;
-        }
-
-        private static int findNumberOfRides(int[] cabTripTime, int time){
-            int ridecompleted=0;
-            for(int i=0;i<cabTripTime.length;i++){
-                ridecompleted+=time/cabTripTime[i];
-            }
-            return ridecompleted;
+            return count;
         }
 
 

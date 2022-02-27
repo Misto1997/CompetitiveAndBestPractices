@@ -1,50 +1,129 @@
-package com.Interview;
+package com.google.hashcode;
 
 import java.io.*;
-import java.util.InputMismatchException;
+import java.util.*;
+import java.util.stream.Collectors;
 
+class ClientChoice {
+    List<String> likeIngredients;
+    List<String> dislikeIngredients;
 
-public class Test {
+    ClientChoice() {
+        likeIngredients = new ArrayList<>();
+        dislikeIngredients = new ArrayList<>();
+    }
+}
+
+class PreferenceDetails {
+    int count;
+    List<Integer> clientList;
+
+    PreferenceDetails() {
+        clientList = new ArrayList<>();
+    }
+}
+
+public class OnePizza {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-           /* int[][] coordinates=new int[3][2];
-            for(int i=0;i<3;i++){
-                coordinates[i]= input.readIntArray(2);
-            }*/
-            System.out.println(solution(4,new int[]{2,4,2,2,1,1,1}));
+            int noOfPotentialClient = input.readInt();
+            ClientChoice[] clientArray = new ClientChoice[noOfPotentialClient];
+            for (int i = 0; i < noOfPotentialClient; i++) {
+                clientArray[i] = new ClientChoice();
+                clientArray[i].likeIngredients = Arrays.asList(input.readSpaceString().split(" "));
+                clientArray[i].dislikeIngredients = Arrays.asList(input.readSpaceString().split(" "));
+            }
+            out.printLine(findIngredients(clientArray));
 
             out.close();
         }
 
-        static int solution(int n, int[] cabTripTime) {
+        private static String findIngredients(ClientChoice[] clientArray) {
+            Map<String, PreferenceDetails> likesMap = new HashMap<>();
+            Map<String, PreferenceDetails> disLikesMap = new HashMap<>();
 
-            int minTimeRequired=1;
-            int maxTimeRequired=1;
-            for(int val:cabTripTime){
-                if(maxTimeRequired < val)
-                    maxTimeRequired=val;
-            }
-            maxTimeRequired*=n;
-            while(minTimeRequired<maxTimeRequired){
-                int mid= minTimeRequired + (maxTimeRequired-minTimeRequired)/2;
-                int ridecompleted=findNumberOfRides(cabTripTime, mid);
-                if(ridecompleted<n)
-                    minTimeRequired=mid+1;
-                else
-                    maxTimeRequired=mid;
-            }
-            return maxTimeRequired;
+            setLikesAndDisLikes(likesMap, disLikesMap, clientArray);
+            Map<String, PreferenceDetails> sortedDisLikesMap = disLikesMap.entrySet().stream().sorted(Comparator.comparingInt(i -> i.getValue().count)).collect(Collectors.toMap(Map.Entry::getKey,
+                    Map.Entry::getValue,
+                    (e1, e2) -> e1, LinkedHashMap::new));
+            findSuitableIngredients(clientArray, likesMap, sortedDisLikesMap);
+
+            return getFormattedAnswer(likesMap);
         }
 
-        private static int findNumberOfRides(int[] cabTripTime, int time){
-            int ridecompleted=0;
-            for(int i=0;i<cabTripTime.length;i++){
-                ridecompleted+=time/cabTripTime[i];
+        private static void findSuitableIngredients(ClientChoice[] clientArray, Map<String, PreferenceDetails> likesMap, Map<String, PreferenceDetails> sortedDisLikesMap) {
+            for (Map.Entry<String, PreferenceDetails> entry : sortedDisLikesMap.entrySet()) {
+                if (likesMap.containsKey(entry.getKey())) {
+                    List<Integer> list;
+                    if (likesMap.get(entry.getKey()).count <= entry.getValue().count) {
+                        list = likesMap.get(entry.getKey()).clientList;
+                        likesMap.remove(entry.getKey());
+                    } else {
+                        list = sortedDisLikesMap.get(entry.getKey()).clientList;
+                        //sortedDisLikesMap.remove(entry.getKey());
+                    }
+                    clearPreferences(list, clientArray, likesMap, sortedDisLikesMap);
+                }
             }
-            return ridecompleted;
+        }
+
+        private static void clearPreferences(List<Integer> list, ClientChoice[] clientArray, Map<String, PreferenceDetails> likesMap, Map<String, PreferenceDetails> sortedDisLikesMap) {
+            for (Integer i : list) {
+                ClientChoice ob = clientArray[i];
+                for (String choice : ob.likeIngredients) {
+                    if (likesMap.containsKey(choice)) {
+                        PreferenceDetails oo = likesMap.get(choice);
+                        oo.count--;
+                        if (oo.count <= 0)
+                            likesMap.remove(choice);
+                        else
+                            oo.clientList.remove(Integer.valueOf(i));
+                    }
+                }
+                for (String choice : ob.dislikeIngredients) {
+                    if (sortedDisLikesMap.containsKey(choice)) {
+                        PreferenceDetails oo = sortedDisLikesMap.get(choice);
+                        oo.count--;
+                       /* if (oo.count <= 0)
+                            sortedDisLikesMap.remove(choice);
+                        else*/
+                            oo.clientList.remove(Integer.valueOf(i));
+                    }
+                }
+            }
+        }
+
+        private static void setLikesAndDisLikes(Map<String, PreferenceDetails> likesMap, Map<String, PreferenceDetails> disLikesMap, ClientChoice[] clientArray) {
+            for (ClientChoice client : clientArray) {
+                for (int i = 1; i < client.likeIngredients.size(); i++) {
+                    if (!likesMap.containsKey(client.likeIngredients.get(i))) {
+                        likesMap.put(client.likeIngredients.get(i), new PreferenceDetails());
+                    }
+                    PreferenceDetails ob = likesMap.get(client.likeIngredients.get(i));
+                    ob.count++;
+                    ob.clientList.add(i);
+                }
+                for (int i = 1; i < client.dislikeIngredients.size(); i++) {
+                    if (!disLikesMap.containsKey(client.dislikeIngredients.get(i))) {
+                        disLikesMap.put(client.dislikeIngredients.get(i), new PreferenceDetails());
+                    }
+                    PreferenceDetails ob = disLikesMap.get(client.dislikeIngredients.get(i));
+                    ob.count++;
+                    ob.clientList.add(i);
+                }
+            }
+        }
+
+        private static String getFormattedAnswer(Map<String, PreferenceDetails> likesMap) {
+            StringJoiner ans = new StringJoiner(" ");
+            ans.add(String.valueOf(likesMap.size()));
+            for (String ingredient : likesMap.keySet()) {
+                ans.add(ingredient);
+            }
+            return ans.toString();
         }
 
 

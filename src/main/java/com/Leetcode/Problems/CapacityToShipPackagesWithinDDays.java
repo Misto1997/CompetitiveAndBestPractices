@@ -1,50 +1,47 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class Test {
+public class CapacityToShipPackagesWithinDDays {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-           /* int[][] coordinates=new int[3][2];
-            for(int i=0;i<3;i++){
-                coordinates[i]= input.readIntArray(2);
-            }*/
-            System.out.println(solution(4,new int[]{2,4,2,2,1,1,1}));
+            int n = input.readInt();
+            int[] weights = input.readIntArray(n);
+            int days = input.readInt();
+            out.print(shipWithinDays(weights, days));
+
 
             out.close();
         }
 
-        static int solution(int n, int[] cabTripTime) {
-
-            int minTimeRequired=1;
-            int maxTimeRequired=1;
-            for(int val:cabTripTime){
-                if(maxTimeRequired < val)
-                    maxTimeRequired=val;
+        private static int shipWithinDays(int[] weights, int days) {
+            int left = 0;
+            int right = 0;
+            for (int weight : weights) {
+                if (weight > left)
+                    left = weight;
+                right += weight;
             }
-            maxTimeRequired*=n;
-            while(minTimeRequired<maxTimeRequired){
-                int mid= minTimeRequired + (maxTimeRequired-minTimeRequired)/2;
-                int ridecompleted=findNumberOfRides(cabTripTime, mid);
-                if(ridecompleted<n)
-                    minTimeRequired=mid+1;
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                int currentWeight = 0, count = 1;
+                for (int weight : weights) {
+                    if (currentWeight + weight > mid) {
+                        count++;
+                        currentWeight = 0;
+                    }
+                    currentWeight += weight;
+                }
+                if (count > days)
+                    left = mid + 1;
                 else
-                    maxTimeRequired=mid;
+                    right = mid;
             }
-            return maxTimeRequired;
-        }
-
-        private static int findNumberOfRides(int[] cabTripTime, int time){
-            int ridecompleted=0;
-            for(int i=0;i<cabTripTime.length;i++){
-                ridecompleted+=time/cabTripTime[i];
-            }
-            return ridecompleted;
+            return left;
         }
 
 

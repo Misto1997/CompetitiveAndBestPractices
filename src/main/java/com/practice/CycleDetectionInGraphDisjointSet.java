@@ -1,50 +1,57 @@
-package com.Interview;
+package com.practice;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-
-public class Test {
+public class CycleDetectionInGraphDisjointSet {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-           /* int[][] coordinates=new int[3][2];
-            for(int i=0;i<3;i++){
-                coordinates[i]= input.readIntArray(2);
-            }*/
-            System.out.println(solution(4,new int[]{2,4,2,2,1,1,1}));
+            int verticesCount = input.readInt();
+            int edgesCount = input.readInt();
+            int[][] edges = new int[edgesCount][2];
+            for (int i = 0; i < edgesCount; i++) {
+                edges[i][0] = input.readInt();
+                edges[i][1] = input.readInt();
+            }
+            int[] parent = new int[verticesCount+1];
+            out.print(isCyclePresent(verticesCount, edges, parent));
+            for(int i : parent)
+                System.out.println(i);
 
             out.close();
         }
 
-        static int solution(int n, int[] cabTripTime) {
-
-            int minTimeRequired=1;
-            int maxTimeRequired=1;
-            for(int val:cabTripTime){
-                if(maxTimeRequired < val)
-                    maxTimeRequired=val;
+        private static boolean isCyclePresent(int n, int[][] edges, int[] parent) {
+            Arrays.fill(parent, -1);
+            for (int i = 0; i < edges.length; i++) {
+                int src = find(parent, edges[i][0]);
+                int dest = find(parent, edges[i][1]);
+                if (src == dest)
+                    return true;
+                union(parent, src, dest);
             }
-            maxTimeRequired*=n;
-            while(minTimeRequired<maxTimeRequired){
-                int mid= minTimeRequired + (maxTimeRequired-minTimeRequired)/2;
-                int ridecompleted=findNumberOfRides(cabTripTime, mid);
-                if(ridecompleted<n)
-                    minTimeRequired=mid+1;
-                else
-                    maxTimeRequired=mid;
-            }
-            return maxTimeRequired;
+            return false;
         }
 
-        private static int findNumberOfRides(int[] cabTripTime, int time){
-            int ridecompleted=0;
-            for(int i=0;i<cabTripTime.length;i++){
-                ridecompleted+=time/cabTripTime[i];
+        private static void union(int[] parent, int src, int dest) {
+            if (parent[src] < parent[dest]) {
+                parent[src] += parent[dest];
+                parent[dest] = src;
+            } else {
+                parent[dest] += parent[src];
+                parent[src] = dest;
             }
-            return ridecompleted;
+
+        }
+
+        private static int find(int[] parent, int i) {
+            if (parent[i] < 0)
+                return i;
+            return find(parent, parent[i]);
         }
 
 

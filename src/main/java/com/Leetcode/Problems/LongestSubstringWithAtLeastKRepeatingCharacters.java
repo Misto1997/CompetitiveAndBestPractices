@@ -1,50 +1,48 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
 
-
-public class Test {
+public class LongestSubstringWithAtLeastKRepeatingCharacters {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-           /* int[][] coordinates=new int[3][2];
-            for(int i=0;i<3;i++){
-                coordinates[i]= input.readIntArray(2);
-            }*/
-            System.out.println(solution(4,new int[]{2,4,2,2,1,1,1}));
-
+            String s = input.readString();
+            int k = input.readInt();
+            out.print(longestSubstring(s, k));
             out.close();
         }
 
-        static int solution(int n, int[] cabTripTime) {
+        private static int longestSubstring(String s, int k) {
+            int max = 0;
+            char[] charArr = s.toCharArray();
 
-            int minTimeRequired=1;
-            int maxTimeRequired=1;
-            for(int val:cabTripTime){
-                if(maxTimeRequired < val)
-                    maxTimeRequired=val;
+            for (int u = 1; u <= 26; u++) {
+                int[] charCount = new int[26];
+                int left = 0, right = 0, unique = 0, kCount = 0;
+                while (right < charArr.length) {
+                    if (unique <= u) {
+                        charCount[charArr[right] - 'a']++;
+                        if (charCount[charArr[right] - 'a'] == 1)
+                            unique++;
+                        if (charCount[charArr[right] - 'a'] == k)
+                            kCount++;
+                        right++;
+                    } else {
+                        charCount[charArr[left] - 'a']--;
+                        if (charCount[charArr[left] - 'a'] == 0)
+                            unique--;
+                        if (charCount[charArr[left] - 'a'] == k - 1)
+                            kCount--;
+                        left++;
+                    }
+                    if (unique == u && kCount == unique)
+                        max = Math.max(max, right - left);
+                }
             }
-            maxTimeRequired*=n;
-            while(minTimeRequired<maxTimeRequired){
-                int mid= minTimeRequired + (maxTimeRequired-minTimeRequired)/2;
-                int ridecompleted=findNumberOfRides(cabTripTime, mid);
-                if(ridecompleted<n)
-                    minTimeRequired=mid+1;
-                else
-                    maxTimeRequired=mid;
-            }
-            return maxTimeRequired;
-        }
-
-        private static int findNumberOfRides(int[] cabTripTime, int time){
-            int ridecompleted=0;
-            for(int i=0;i<cabTripTime.length;i++){
-                ridecompleted+=time/cabTripTime[i];
-            }
-            return ridecompleted;
+            return max;
         }
 
 
