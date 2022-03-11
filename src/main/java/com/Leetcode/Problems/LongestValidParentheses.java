@@ -1,18 +1,48 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
 import java.util.InputMismatchException;
+import java.util.Stack;
 
-
-public class Test {
+public class LongestValidParentheses {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
+            String s = input.readString();
+            out.print(longestValidParentheses(s));
 
 
             out.close();
+        }
+
+        private static int longestValidParentheses(String s) {
+            if (s == null || s.isEmpty())
+                return 0;
+            int max = 0;
+            Stack<Integer> stack = new Stack<>();
+            char[] brackets = s.toCharArray();
+            int lastIndex = -1;
+            for (int i = 0; i < brackets.length; i++) {
+                if (brackets[i] == '(') {
+                    stack.push(i);
+                } else {
+                    if (stack.isEmpty()) {
+                        lastIndex = i;
+                    } else {
+                        stack.pop();
+                        if (stack.isEmpty()) {
+                            if (max < i - lastIndex)
+                                max = i - lastIndex;
+                        } else {
+                            if (max < i - stack.peek())
+                                max = i - stack.peek();
+                        }
+                    }
+                }
+            }
+            return max;
         }
 
         private InputStream stream;

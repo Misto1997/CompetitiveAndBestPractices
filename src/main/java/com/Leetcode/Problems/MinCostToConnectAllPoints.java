@@ -1,18 +1,62 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-
-public class Test {
+public class MinCostToConnectAllPoints {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-
+            int n = input.readInt();
+            int[][] points = new int[n][2];
+            for(int i=0;i<n;i++)
+                points[i]= input.readIntArray(2);
+            out.print(minCostConnectPoints(points));
 
             out.close();
+        }
+
+        private static int minCostConnectPoints(int[][] points) {
+            int[][] ar = new int[points.length][points.length];
+            int[] dist = new int[points.length];
+            Arrays.fill(dist, Integer.MAX_VALUE);
+            boolean[] visited = new boolean[points.length];
+            for (int i = 0; i < points.length; i++) {
+                for (int j = i + 1; j < points.length; j++) {
+                    int distance = Math.abs(points[i][0] - points[j][0]) + Math.abs(points[i][1] - points[j][1]);
+                    ar[i][j] = distance;
+                    ar[j][i] = distance;
+                }
+            }
+            dist[0] = 0;
+            for (int i = 0; i < points.length; i++) {
+                int minSource = getMinDistanceIndex(dist, visited);
+                visited[minSource] = true;
+                for (int j = 0; j < points.length; j++) {
+                    if (!visited[j] && ar[minSource][j] != 0 && ar[minSource][j] < dist[j]) {
+                        dist[j] = ar[minSource][j];
+                    }
+                }
+            }
+            int sum = 0;
+            for (int i = 0; i < points.length; i++)
+                sum += dist[i];
+            return sum;
+        }
+
+        private static int getMinDistanceIndex(int[] dist, boolean[] visited) {
+            int index = -1;
+            int minDist = Integer.MAX_VALUE;
+            for (int i = 0; i < dist.length; i++) {
+                if (visited[i] == false && minDist > dist[i]) {
+                    minDist = dist[i];
+                    index = i;
+                }
+            }
+            return index;
         }
 
         private InputStream stream;

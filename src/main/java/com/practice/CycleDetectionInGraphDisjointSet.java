@@ -19,8 +19,8 @@ public class CycleDetectionInGraphDisjointSet {
             }
             int[] parent = new int[verticesCount+1];
             out.print(isCyclePresent(verticesCount, edges, parent));
-            for(int i : parent)
-                System.out.println(i);
+            /*for(int i : parent)
+                System.out.println(i);*/
 
             out.close();
         }

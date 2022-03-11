@@ -1,18 +1,66 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
-import java.util.InputMismatchException;
+import java.util.*;
 
-
-public class Test {
+public class SmallestStringWithSwaps {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-
+            String s = input.readString();
+            List<List<Integer>> pairs = new ArrayList<>();
+            int n = input.readInt();
+            for (int i = 0; i < n; i++) {
+                List<Integer> pair = new ArrayList<>();
+                pair.add(input.readInt());
+                pair.add(input.readInt());
+                pairs.add(pair);
+            }
+            out.print(smallestStringWithSwaps(s, pairs));
 
             out.close();
+        }
+
+        private static String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+            int[] parent = new int[s.length()];
+            Arrays.fill(parent, -1);
+            for (int i = 0; i < pairs.size(); i++) {
+                int src = find(parent, pairs.get(i).get(0));
+                int dest = find(parent, pairs.get(i).get(1));
+                if (src == dest)
+                    continue;
+                union(parent, src, dest);
+            }
+            Map<Integer, PriorityQueue<Character>> map = new HashMap<>();
+            char[] charArr=s.toCharArray();
+            for (int i = 0; i < charArr.length; i++) {
+                int root = find(parent, i);
+                map.putIfAbsent(root, new PriorityQueue<>());
+                map.get(root).add(charArr[i]);
+            }
+            StringBuilder str = new StringBuilder();
+            for (int i = 0; i < charArr.length; i++) {
+                str.append(map.get(find(parent, i)).poll());
+            }
+            return str.toString();
+        }
+
+        private static int find(int[] parent, int i) {
+            if (parent[i] < 0)
+                return i;
+            return find(parent, parent[i]);
+        }
+
+        private static void union(int[] parent, int src, int dest) {
+            if (parent[src] < parent[dest]) {
+                parent[src] += parent[dest];
+                parent[dest] = src;
+            } else {
+                parent[dest] += parent[src];
+                parent[src] = dest;
+            }
         }
 
         private InputStream stream;

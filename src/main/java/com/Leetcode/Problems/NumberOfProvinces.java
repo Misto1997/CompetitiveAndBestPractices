@@ -1,19 +1,64 @@
-package com.Interview;
+package com.Leetcode.Problems;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
-
-public class Test {
+public class NumberOfProvinces {
     private static class InputReader {
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-
+            int n = input.readInt();
+            int[][] isConnected = new int[n][n];
+            for (int i = 0; i < n; i++)
+                isConnected[i] = input.readIntArray(n);
+            out.print(findCircleNum(isConnected));
 
             out.close();
         }
+
+        private static int findCircleNum(int[][] isConnected) {
+            int[] parent = new int[isConnected.length];
+            Arrays.fill(parent, -1);
+            int total = 0;
+            for (int i = 0; i < isConnected.length; i++) {
+                for (int j = 0; j < isConnected.length; j++) {
+                    if (isConnected[i][j] == 1){
+                        int src = find(parent, i);
+                        int dest = find(parent, j);
+                        if (src == dest)
+                            continue;
+                        union(parent, src, dest);
+                    }
+
+                }
+            }
+
+            for (int i = 0; i < parent.length; i++) {
+                if (parent[i] < 0)
+                    total++;
+            }
+            return total;
+        }
+
+        private static int find(int[] parent, int i) {
+            if (parent[i] < 0)
+                return i;
+            return find(parent, parent[i]);
+        }
+
+        private static void union(int[] parent, int src, int dest) {
+            if (parent[src] < parent[dest]) {
+                parent[src] += parent[dest];
+                parent[dest] = src;
+            } else {
+                parent[dest] += parent[src];
+                parent[src] = dest;
+            }
+        }
+
 
         private InputStream stream;
         private byte[] buf = new byte[1024];
