@@ -1,45 +1,70 @@
 package com.Leetcode.Problems;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
+class Cord {
+    int x;
+    int y;
 
+    Cord(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
 
-public class AllPathsFromSourceToTarget {
+public class AsFarFromLandAsPossible {
     private static class InputReader {
-
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            int[][] graph = {{1, 2}, {3}, {3}, {}};
-            List<List<Integer>> list = allPathsSourceTarget(graph);
-            out.print(list);
+            int n = input.readInt();
+            int[][] grid = new int[n][n];
+            for (int i = 0; i < n; i++)
+                grid[i] = input.readIntArray(n);
+            out.print(maxDistance(grid));
+
 
             out.close();
         }
 
-        private static List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-            List<List<Integer>> list = new ArrayList<>();
-            for (int i = 0; i < graph[0].length; i++) {
-                List<Integer> l = new ArrayList<>();
-                l.add(0);
-                checkPath(list, l, graph, graph[0][i]);
+        private static int maxDistance(int[][] grid) {
+            int size = grid.length;
+            Queue<Cord> q = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (grid[i][j] == 1) {
+                        q.add(new Cord(i + 1, j));
+                        q.add(new Cord(i, j + 1));
+                        q.add(new Cord(i - 1, j));
+                        q.add(new Cord(i, j - 1));
+                    }
+                }
             }
-            return list;
+            return findDistance(grid, q, size);
         }
 
-        private static void checkPath(List<List<Integer>> list, List<Integer> l, int[][] graph, int i) {
-            l.add(i);
-            if (i == graph.length - 1) {
-                list.add(l);
-                return;
+        private static int findDistance(int[][] grid, Queue<Cord> q, int size) {
+            int max = -1;
+            while (!q.isEmpty()) {
+                int qSize = q.size();
+                max++;
+                while (qSize-- > 0) {
+                    Cord cord = q.poll();
+                    int x = cord.x, y = cord.y;
+                    if (x >= 0 && y >= 0 && x < size && y < size && grid[x][y] == 0) {
+                        q.add(new Cord(x + 1, y));
+                        q.add(new Cord(x, y + 1));
+                        q.add(new Cord(x - 1, y));
+                        q.add(new Cord(x, y - 1));
+                        grid[x][y] = -1;
+                    }
+                }
             }
-            for (int j = 0; j < graph[i].length; j++) {
-                checkPath(list, new ArrayList<>(l), graph, graph[i][j]);
-            }
+            return max == 0 ? -1 : max;
         }
 
         private InputStream stream;

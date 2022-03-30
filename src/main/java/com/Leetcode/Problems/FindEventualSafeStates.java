@@ -1,45 +1,19 @@
 package com.Leetcode.Problems;
 
+import com.Interview.Test;
+
 import java.io.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 
-
-
-public class AllPathsFromSourceToTarget {
+public class FindEventualSafeStates {
     private static class InputReader {
-
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            int[][] graph = {{1, 2}, {3}, {3}, {}};
-            List<List<Integer>> list = allPathsSourceTarget(graph);
-            out.print(list);
+
 
             out.close();
-        }
-
-        private static List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-            List<List<Integer>> list = new ArrayList<>();
-            for (int i = 0; i < graph[0].length; i++) {
-                List<Integer> l = new ArrayList<>();
-                l.add(0);
-                checkPath(list, l, graph, graph[0][i]);
-            }
-            return list;
-        }
-
-        private static void checkPath(List<List<Integer>> list, List<Integer> l, int[][] graph, int i) {
-            l.add(i);
-            if (i == graph.length - 1) {
-                list.add(l);
-                return;
-            }
-            for (int j = 0; j < graph[i].length; j++) {
-                checkPath(list, new ArrayList<>(l), graph, graph[i][j]);
-            }
         }
 
         private InputStream stream;

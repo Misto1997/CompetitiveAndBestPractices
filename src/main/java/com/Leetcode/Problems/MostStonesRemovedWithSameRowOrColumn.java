@@ -1,44 +1,54 @@
 package com.Leetcode.Problems;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.List;
+import java.util.Map;
 
+public class MostStonesRemovedWithSameRowOrColumn {
 
+    static Map<Integer, Integer> parent = new HashMap<>();
+    static int islands;
 
-public class AllPathsFromSourceToTarget {
     private static class InputReader {
 
 
         public static void main(String[] args) {
             InputReader input = new InputReader(System.in);
             OutputWriter out = new OutputWriter(System.out);
-            int[][] graph = {{1, 2}, {3}, {3}, {}};
-            List<List<Integer>> list = allPathsSourceTarget(graph);
-            out.print(list);
+            int n = input.readInt();
+            int[][] stones = new int[n][2];
+            for (int i = 0; i < n; i++) {
+                stones[i][0] = input.readInt();
+                stones[i][1] = input.readInt();
+            }
+            out.print(removeStones(stones));
+
 
             out.close();
         }
 
-        private static List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-            List<List<Integer>> list = new ArrayList<>();
-            for (int i = 0; i < graph[0].length; i++) {
-                List<Integer> l = new ArrayList<>();
-                l.add(0);
-                checkPath(list, l, graph, graph[0][i]);
-            }
-            return list;
+
+        public static int removeStones(int[][] stones) {
+            for (int i = 0; i < stones.length; ++i)
+                union(stones[i][0], ~stones[i][1]);
+            return stones.length - islands;
         }
 
-        private static void checkPath(List<List<Integer>> list, List<Integer> l, int[][] graph, int i) {
-            l.add(i);
-            if (i == graph.length - 1) {
-                list.add(l);
-                return;
-            }
-            for (int j = 0; j < graph[i].length; j++) {
-                checkPath(list, new ArrayList<>(l), graph, graph[i][j]);
+        public static int find(int i) {
+            if (parent.putIfAbsent(i, i) == null)
+                islands++;
+            if (i != parent.get(i))
+                parent.put(i, find(parent.get(i)));
+            return parent.get(i);
+        }
+
+        public static void union(int x, int y) {
+            x = find(x);
+            y = find(y);
+            if (x != y) {
+                parent.put(x, y);
+                islands--;
             }
         }
 
